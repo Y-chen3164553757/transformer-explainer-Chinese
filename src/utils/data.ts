@@ -25,6 +25,7 @@ export const fakeRunWithCachedData = async ({
 	sampling: Sampling;
 }) => {
 	isModelRunning.set(true);
+	predictedToken.set(undefined);
 
 	modelData.set(cachedData);
 	tokens.set(cachedData.tokens);
@@ -54,6 +55,7 @@ export const runModel = async ({
 	sampling: Sampling;
 }) => {
 	isModelRunning.set(true);
+	predictedToken.set(undefined);
 
 	const { token_ids, input_tokens } = await getTokenization(tokenizer, input === '' ? ' ' : input);
 

@@ -14,7 +14,7 @@
 
 <div class="top-bar flex w-full items-center gap-4 px-10 py-2 pb-3" class:active={isActive}>
 	<div class="logo text-bold text-gray-700" data-click="logo">
-		T<span class="small">RANSFORMER</span> E<span class="small">XPLAINER</span>
+		Transformer<span class="small"> 详解</span>
 	</div>
 	<div class="inputs flex grow items-center">
 		<div class="input-wrapper w-full" class:active={isActive}>
@@ -100,12 +100,17 @@
 		.logo {
 			flex-shrink: 0;
 			white-space: nowrap;
-			font-family: 'Jersey 10', sans-serif;
+			font-family:
+				'Jersey 10',
+				'Noto Sans SC',
+				'PingFang SC',
+				'Microsoft YaHei',
+				sans-serif;
 
 			font-optical-sizing: auto;
 			font-style: normal;
 
-			font-size: 2rem;
+			font-size: 1.85rem;
 			// color: theme('colors.blue.800');
 
 			background: linear-gradient(
@@ -117,7 +122,7 @@
 			-webkit-text-fill-color: transparent;
 
 			.small {
-				font-size: 1.8rem;
+				font-size: 1.65rem;
 			}
 		}
 		.icons {

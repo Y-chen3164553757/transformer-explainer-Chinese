@@ -3,6 +3,7 @@
 	import Temperature from './Temperature.svelte';
 
 	import { ChevronDownOutline } from 'flowbite-svelte-icons';
+	import { get } from 'svelte/store';
 	import {
 		inputText,
 		isModelRunning,
@@ -12,7 +13,6 @@
 		expandedBlock,
 		selectedExampleIdx,
 		isLoaded,
-		isOnAnimation,
 		isMobile,
 		weightPopover,
 		sampling,
@@ -37,34 +37,45 @@
 
 	$: predictedTokenTemp = $predictedToken?.token || '';
 
-	const wordLimit = 12;
-	$: exceedLimit = inputTextTemp.split(' ').length >= wordLimit;
+	function commitPendingPrediction(): string {
+		const pred = get(predictedToken)?.token ?? '';
+		const base = inputRef?.innerText ?? inputTextTemp;
+		const merged = (base + pred).replace(/[\s\n]+/g, ' ').trim();
+		predictedToken.set(undefined);
+		inputTextTemp = merged;
+		if (inputRef) inputRef.innerText = merged;
+		return merged;
+	}
 
-	// Text input
-	const onFocusInput = (e) => {
-		let formattedString = (inputTextTemp + predictedTokenTemp).replace(/[\s\n]+/g, ' ');
-
-		inputTextTemp = formattedString;
-
-		// set predicted to empty
-		predictedTokenTemp = '';
-		// set input box text
-		inputRef.innerText = inputTextTemp;
+	const onFocusInput = () => {
+		commitPendingPrediction();
 	};
 
-	const onInput = (e) => {
+	const onInput = () => {
 		inputTextTemp = inputRef.innerText;
 	};
 
+	const onCompositionEnd = () => {
+		inputTextTemp = inputRef.innerText;
+	};
+
+	/** 无待合并预测时，将输入框内容与 store 对齐，避免别处读到旧 inputText（不触发紫色预测区的合并逻辑） */
+	const syncDomToStoreIfNeeded = () => {
+		if (!inputRef || get(predictedToken)) return;
+		const dom = inputRef.innerText.replace(/[\s\n]+/g, ' ').trim();
+		if (dom !== get(inputText)) {
+			inputText.set(dom);
+		}
+	};
+
 	const handleSubmit = (e) => {
-		// Complete any running animation before starting new generation
 		completeCurrentAnimation();
 
-		setTimeout(() => {
-			onFocusInput();
+		queueMicrotask(() => {
+			const merged = commitPendingPrediction();
 			textPages.find((page) => page.id === 'how-transformers-work')?.complete();
 
-			inputText.set(inputTextTemp);
+			inputText.set(merged);
 
 			window.dataLayer?.push({
 				event: 'generate-next-token',
@@ -74,20 +85,17 @@
 				sampling_value: $sampling.value,
 				temperature_value: $temperature,
 				current_token_length: $tokenIds.length,
-				input_word_count: inputTextTemp
-					.trim()
-					.split(/\s+/)
-					.filter((word) => word.length > 0).length,
+				input_char_count: [...merged].length,
 				use_custom_input: useCustomInput,
 				user_id: $userId
 			});
-		}, 0);
+		});
 	};
 
 	const handleKeyDown = (e) => {
 		if (e.key === 'Enter') {
 			e.preventDefault();
-			if (disabled || exceedLimit) return;
+			if (disabled) return;
 			handleSubmit(e);
 			return;
 		}
@@ -104,7 +112,7 @@
 		dropdownOpen = false;
 
 		selectedExampleIdx.set(i);
-		predictedTokenTemp = '';
+		predictedToken.set(undefined);
 
 		inputTextTemp = d;
 		inputRef.innerText = inputTextTemp;
@@ -147,7 +155,7 @@
 				class:selectDisabled
 				class="select-button inline-flex shrink-0 items-center justify-center border border-s-0 border-gray-200 bg-white px-3 py-2 text-center text-xs font-medium text-gray-900 first:rounded-s-lg first:border-s last:rounded-e-lg"
 			>
-				Examples<ChevronDownOutline class="pointer-events-none h-4 w-4 text-gray-500" />
+				示例<ChevronDownOutline class="pointer-events-none h-4 w-4 text-gray-500" />
 			</button>
 			<Dropdown bind:open={dropdownOpen} class="example-dropdown">
 				{#each inputTextExample as text, index}
@@ -180,9 +188,11 @@
 						bind:this={inputRef}
 						contenteditable={!disabled}
 						class="text-box"
-						placeholder="Test your own input text"
+						data-placeholder="输入或编辑中文上下文…"
 						on:focus={onFocusInput}
+						on:blur={syncDomToStoreIfNeeded}
 						on:input={onInput}
+						on:compositionend={onCompositionEnd}
 						on:keydown={handleKeyDown}
 						on:click={(e) => {
 							e.stopPropagation();
@@ -211,29 +221,23 @@
 					<div class="loading"><LoadingDots /></div>
 				{/if}
 				{#if $isMobile}
-					<span class="helper-text"
-						>Try the examples. Please use a desktop computer to input GPT-2 prompts directly.</span
-					>
+					<span class="helper-text">可先试用示例；完整输入请在桌面浏览器中使用。</span>
 				{:else if $isLoaded && $isFetchingModel}
-					<span class="helper-text"
-						>Try the examples while GPT-2 model is being downloaded (600MB)</span
-					>
-				{:else if exceedLimit}
-					<span class="helper-text">You can enter up to {wordLimit} words.</span>
+					<span class="helper-text">模型下载中，可先点击上方示例体验（体积较大，请稍候）。</span>
 				{/if}
 			</div>
 		</ButtonGroup>
 		<button
 			data-click="generate-btn"
-			disabled={disabled || exceedLimit || exceedLimit}
+			disabled={disabled}
 			class={classNames('generate-button rounded-lg text-center text-sm shadow-sm', {
-				disabled: disabled || exceedLimit,
-				active: !(disabled || exceedLimit)
+				disabled: disabled,
+				active: !disabled
 			})}
 			type="submit"
 			on:click={handleSubmit}
 		>
-			Generate
+			生成下一词
 		</button>
 	</form>
 	<div class="parameters" data-click="input-parameters">
@@ -279,9 +283,9 @@
 		border-left: none;
 		border-start-end-radius: 0.5rem;
 		border-end-end-radius: 0.5rem;
-		font-size: 1rem;
-		line-height: 1rem;
-		padding: 0.5rem;
+		font-size: 1.05rem;
+		line-height: 1.45;
+		padding: 0.55rem 0.5rem;
 		white-space: pre-wrap;
 		gap: 0.3rem;
 
@@ -298,8 +302,15 @@
 
 			.text-box {
 				white-space: nowrap;
+				min-height: 1.45em;
 				br {
 					display: none;
+				}
+
+				&:empty:before {
+					content: attr(data-placeholder);
+					color: theme('colors.gray.400');
+					pointer-events: none;
 				}
 
 				&:focus {

@@ -30,6 +30,7 @@
 	import Mlp from '~/components/Mlp.svelte';
 
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 	import classNames from 'classnames';
 	import { base } from '$app/paths';
 	import * as ort from 'onnxruntime-web';
@@ -105,29 +106,32 @@
 	// Subscribe inputs
 	const cachedDataMap = [ex0, ex1, ex2, ex3, ex4];
 	const subscribeInputs = (tokenizer: PreTrainedTokenizer) => {
-		const runModelOrCache = () => {
-			if ($isFetchingModel || !$modelSession) {
-				const cachedData = cachedDataMap[$selectedExampleIdx];
+		/**
+		 * 必须用 subscribe 传入的字符串或 get(inputText)，不能在同一同步栈里用 `$inputText`：
+		 * store 已更新时，组件级 `$` 可能尚未推进，会导致推理少一截 token、与输入框 DOM 不同步。
+		 */
+		const runModelOrCache = (committedInput: string) => {
+			if (get(isFetchingModel) || !get(modelSession)) {
+				const cachedData = cachedDataMap[get(selectedExampleIdx)];
 
 				fakeRunWithCachedData({
 					cachedData,
 					tokenizer,
-					temperature: $temperature,
-					sampling: $sampling
+					temperature: get(temperature),
+					sampling: get(sampling)
 				});
 				return;
 			}
-			// run model when input has changed
 			runModel({
 				tokenizer,
-				input: $inputText.trim(),
-				temperature: $temperature,
-				sampling: $sampling
+				input: committedInput.trim(),
+				temperature: get(temperature),
+				sampling: get(sampling)
 			});
 		};
 
 		const unsubscribeInputText = inputText.subscribe((value) => {
-			runModelOrCache();
+			runModelOrCache(value);
 		});
 
 		let initialTemperature = true; // prevent initial redundant rendering
@@ -138,9 +142,9 @@
 			}
 			adjustTemperature({
 				tokenizer,
-				logits: $modelData.logits,
+				logits: get(modelData).logits,
 				temperature: value,
-				sampling: $sampling
+				sampling: get(sampling)
 			});
 		});
 
@@ -152,8 +156,8 @@
 			}
 			adjustTemperature({
 				tokenizer,
-				logits: $modelData.logits,
-				temperature: $temperature,
+				logits: get(modelData).logits,
+				temperature: get(temperature),
 				sampling: value
 			});
 		});

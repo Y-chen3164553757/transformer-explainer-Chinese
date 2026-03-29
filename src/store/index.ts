@@ -42,7 +42,7 @@ export const modelSession = writable<ort.InferenceSession>();
 
 // transformer model output
 export const modelData = writable<ModelData>(ex0);
-export const predictedToken = writable<Probability>();
+export const predictedToken = writable<Probability | undefined>(undefined);
 export const tokens = writable<string[]>(ex0?.tokens);
 export const tokenIds = writable<number[]>(ex0?.tokenIds);
 
