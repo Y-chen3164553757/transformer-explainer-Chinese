@@ -6,92 +6,70 @@
 
 <div id="description">
 	<div class="article-section" data-click="article-intro">
-		<h1>What is a Transformer?</h1>
+		<h1>什么是 Transformer？</h1>
 
 		<p>
-			Transformer is a neural network architecture that has fundamentally changed the approach to
-			Artificial Intelligence. Transformer was first introduced in the seminal paper
+			Transformer 是一种神经网络架构，从根本上改变了人工智能的研究范式。它最早出现在 2017 年的开创性论文
 			<a
 				href="https://dl.acm.org/doi/10.5555/3295222.3295349"
 				title="ACM Digital Library"
-				target="_blank">"Attention is All You Need"</a
-			>
-			in 2017 and has since become the go-to architecture for deep learning models, powering text-generative
-			models like OpenAI's <strong>GPT</strong>, Meta's <strong>Llama</strong>, and Google's
-			<strong>Gemini</strong>. Beyond text, Transformer is also applied in
+				target="_blank">《Attention is All You Need》</a
+			>中，此后成为深度学习模型的主流架构，驱动了 OpenAI 的 <strong>GPT</strong>、Meta 的 <strong>Llama</strong>、Google 的
+			<strong>Gemini</strong> 等文本生成模型。除文本外，Transformer 还被应用于
 			<a
 				href="https://huggingface.co/learn/audio-course/en/chapter3/introduction"
 				title="Hugging Face"
-				target="_blank">audio generation</a
-			>,
+				target="_blank">音频生成</a
+			>、
 			<a
 				href="https://huggingface.co/learn/computer-vision-course/unit3/vision-transformers/vision-transformers-for-image-classification"
 				title="Hugging Face"
-				target="_blank">image recognition</a
-			>,
+				target="_blank">图像识别</a
+			>、
 			<a href="https://elifesciences.org/articles/82819" title="eLife"
-				>protein structure prediction</a
-			>, and even
+				>蛋白质结构预测</a
+			>，乃至
 			<a
 				href="https://www.deeplearning.ai/the-batch/reinforcement-learning-plus-transformers-equals-efficiency/"
 				title="Deep Learning AI"
-				target="_blank">game playing</a
-			>, demonstrating its versatility across numerous domains.
+				target="_blank">游戏对弈</a
+			>，展示了其在众多领域的强大通用性。
 		</p>
 		<p>
-			Fundamentally, text-generative Transformer models operate on the principle of <strong
-				>next-token prediction</strong
-			>: given a text prompt from the user, what is the
-			<em>most probable next token (a word or part of a word)</em> that will follow this input? The core
-			innovation and power of Transformers lie in their use of self-attention mechanism, which allows
-			them to process entire sequences and capture long-range dependencies more effectively than previous
-			architectures.
+			从本质上看，文本生成 Transformer 模型遵循<strong>下一词元预测</strong>的原则：给定用户输入的文本提示，
+			<em>最有可能跟随该输入的下一个词元（一个词或词的一部分）</em>是什么？Transformer 的核心创新与强大之处在于其自注意力机制，该机制能够处理整个序列，并比以往架构更有效地捕捉远距离依赖关系。
 		</p>
 		<p>
-			GPT-2 family of models are prominent examples of text-generative Transformers. Transformer
-			Explainer is powered by the
+			GPT-2 系列是文本生成 Transformer 的典型代表。本工具使用
 			<a href="https://huggingface.co/openai-community/gpt2" title="Hugging Face" target="_blank"
 				>GPT-2</a
-			>
-			(small) model which has 124 million parameters. While it is not the latest or most powerful Transformer
-			model, it shares many of the same architectural components and principles found in the current
-			state-of-the-art models making it an ideal starting point for understanding the basics.
+			>（small）模型，共拥有 1.24 亿个参数。它虽非最新或最强大的 Transformer 模型，但与当前最先进的模型共享许多相同的架构组件和设计原则，是理解基础知识的理想起点。
 		</p>
 	</div>
 
 	<div class="article-section" data-click="article-overview">
-		<h1>Transformer Architecture</h1>
+		<h1>Transformer 架构</h1>
 
 		<p>
-			Every text-generative Transformer consists of these <strong>three key components</strong>:
+			每个文本生成 Transformer 都由以下<strong>三个核心组件</strong>构成：
 		</p>
 		<ol>
 			<li>
-				<strong class="bold-purple">Embedding</strong>: Text input is divided into smaller units
-				called tokens, which can be words or subwords. These tokens are converted into numerical
-				vectors called embeddings, which capture the semantic meaning of words.
+				<strong class="bold-purple">嵌入（Embedding）</strong>：文本输入被分割成称为词元的更小单元，可以是单词或子词。这些词元被转换为数值向量（即嵌入），以捕获词语的语义含义。
 			</li>
 			<li>
-				<strong class="bold-purple">Transformer Block</strong> is the fundamental building block of
-				the model that processes and transforms the input data. Each block includes:
+				<strong class="bold-purple">Transformer 块</strong>是模型处理和转换输入数据的基本构建单元。每个块包含：
 				<ul class="">
 					<li>
-						<strong>Attention Mechanism</strong>, the core component of the Transformer block. It
-						allows tokens to communicate with other tokens, capturing contextual information and
-						relationships between words.
+						<strong>注意力机制</strong>，Transformer 块的核心组件，允许词元之间相互通信，捕获上下文信息和词语间的关系。
 					</li>
 					<li>
-						<strong>MLP (Multilayer Perceptron) Layer</strong>, a feed-forward network that operates
-						on each token independently. While the goal of the attention layer is to route
-						information between tokens, the goal of the MLP is to refine each token's
-						representation.
+						<strong>MLP（多层感知机）层</strong>，一种对每个词元独立操作的前馈网络。注意力层的目标是在词元之间路由信息，而 MLP 的目标是精炼每个词元的表示。
 					</li>
 				</ul>
 			</li>
 			<li>
-				<strong class="bold-purple">Output Probabilities</strong>: The final linear and softmax
-				layers transform the processed embeddings into probabilities, enabling the model to make
-				predictions about the next token in a sequence.
+				<strong class="bold-purple">输出概率</strong>：最终的线性层和 Softmax 层将处理后的嵌入转换为概率，使模型能够对序列中的下一个词元做出预测。
 			</li>
 		</ol>
 	</div>

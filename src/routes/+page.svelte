@@ -38,7 +38,7 @@
 	import { fetchAndMergeChunks } from '~/utils/fetchChunks';
 	import WeightPopovers from '~/components/WeightPopovers.svelte';
 	import { fade } from 'svelte/transition';
-	import { AutoTokenizer } from '@xenova/transformers';
+	import { AutoTokenizer, env as transformersEnv } from '@xenova/transformers';
 	import { ex0, ex1, ex2, ex3, ex4 } from '~/constants/examples';
 	import BlockTransition from '~/components/BlockTransition.svelte';
 	import QKV from '~/components/QKV.svelte';
@@ -47,12 +47,16 @@
 	ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.0/dist/';
 	ort.env.logLevel = 'error';
 
+	// 使用本地 tokenizer 文件，避免从 HuggingFace 下载
+	transformersEnv.localModelPath = `${base}/tokenizers/`;
+	transformersEnv.allowRemoteModels = false;
+
 	let active = false;
 	let appStartTime = Date.now();
 
 	// fetch model
 	onMount(async () => {
-		const gpt2Tokenizer = await AutoTokenizer.from_pretrained('Xenova/gpt2');
+		const gpt2Tokenizer = await AutoTokenizer.from_pretrained('bert-base-chinese');
 		active = true;
 
 		const unsubscribe = subscribeInputs(gpt2Tokenizer);
@@ -66,10 +70,10 @@
 
 	// Fetch model onnx
 	const fetchModel = async () => {
-		const chunkNum = 63; //TODO: move to model meta
+		const chunkNum = 46; //TODO: move to model meta
 		const chunkUrls = Array(chunkNum)
 			.fill(0)
-			.map((d, i) => `${base}/model-v2/gpt2.onnx.part${i}`);
+			.map((d, i) => `${base}/model-v2-chinese/gpt2.onnx.part${i}`);
 
 		// Fetch from cache
 		const { hasCache, mergedArray } = await fetchAndMergeChunks(chunkUrls);

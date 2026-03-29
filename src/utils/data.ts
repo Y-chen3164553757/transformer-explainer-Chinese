@@ -114,8 +114,11 @@ export const adjustTemperature = async ({
 };
 
 export const getTokenization = async (tokenizer: PreTrainedTokenizer, input: string) => {
-	const token_ids = tokenizer.encode(input);
-	const input_tokens = token_ids.map((id) => tokenizer.decode([id])).flat();
+	const token_ids = tokenizer.encode(input, null, { add_special_tokens: false });
+	// 逐个 decode 取单字，替换 BERT wordpiece 的 ## 前缀
+	const input_tokens = token_ids.map((id: number) =>
+		formatTokenForDisplay(tokenizer.decode([id]))
+	);
 
 	return {
 		token_ids,
@@ -300,12 +303,13 @@ function softmax(logits: number[]): { expLogits: number[]; probabilities: number
 
 // Helper function to format tokens for display
 function formatTokenForDisplay(token: string): string {
-	// Replace special whitespace characters with readable labels
 	return token
+		.replace(/^##/, '')           // 去除 BERT wordpiece 的 ## 前缀
+		.replace(/^ /, '')             // 去除 BERT decode 的前导空格
 		.replace(/\n/g, '[NEWLINE]')
 		.replace(/\t/g, '[TAB]')
 		.replace(/\r/g, '[CR]')
-		.replace(/\s{2,}/g, (match) => `[${match.length} SPACES]`); // Multiple spaces
+		.replace(/\s{2,}/g, (match) => `[${match.length} SPACES]`);
 }
 
 // Simulates the np.random.choice function in Python.

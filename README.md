@@ -1,64 +1,26 @@
-# Transformer Explainer: Interactive Learning of Text-Generative Models
+# Transformer Explainer 中文版
 
-Transformer Explainer is an interactive visualization tool designed to help anyone learn how Transformer-based models like GPT work. It runs a live GPT-2 model right in your browser, allowing you to experiment with your own text and observe in real time how internal components and operations of the Transformer work together to predict the next tokens. Try Transformer Explainer at http://poloclub.github.io/transformer-explainer and watch a demo video on YouTube https://youtu.be/TFUc41G2ikY.<br/><br/>
-[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-[![arxiv badge](https://img.shields.io/badge/arXiv-2408.04619-red)](https://arxiv.org/abs/2408.04619)
+本项目由本人独立改造，基于中文 GPT-2 模型，支持中文输入、推理与可视化。软件著作权归本人所有，未经许可禁止复制、分发、商用。
 
-<a href="https://youtu.be/TFUc41G2ikY" target="_blank"><img width="100%" src='https://github.com/user-attachments/assets/0a4d8888-6555-4df5-bc71-77f1299115c3'></a>
+## 主要特性
+- 支持中文 GPT-2（uer/gpt2-chinese-cluecorpussmall）推理与可视化
+- 全界面中文化，适配中文分词与显示
+- 保留原项目全部交互与可视化能力
+- 示例数据、tokenizer、模型分片均已适配中文
 
-## Live Demo
-Try Transformer Explainer: http://poloclub.github.io/transformer-explainer
+## 快速开始
+1. 安装依赖：`npm install`
+2. 启动开发环境：`npm run dev`
+3. 按照 `替换中文模型全流程.md` 可复现模型转换与分片
 
-## Research Paper
+## 目录结构
+- `src/`：前端核心代码
+- `static/`：静态资源（图片、tokenizer 配置、模型分片等）
+- `models/`：本地模型权重与中间文件（不上传）
 
-[**Transformer Explainer: Interactive Learning of Text-Generative Models**](https://arxiv.org/abs/2408.04619).
-Aeree Cho, Grace C. Kim, Alexander Karpekov, Alec Helbling, Zijie J. Wang, Seongmin Lee, Benjamin Hoover, Duen Horng Chau.
-_Poster, IEEE VIS 2024._
+## 协议声明
+本项目为私有协议，著作权归本人所有，禁止任何第三方在未获授权情况下复制、分发、商用。
 
-## How to run locally
-
-#### Prerequisites
-
-- Node.js v20 or higher
-- NPM v10 or higher
-
-#### Steps
-
-```bash
-git clone https://github.com/poloclub/transformer-explainer.git
-cd transformer-explainer
-npm install
-npm run dev
-```
-
-Then, on your web browser, access http://localhost:5173.
-
-## Credits
-
-Transformer Explainer was created by <a href="https://aereeeee.github.io/" target="_blank">Aeree Cho</a>, <a href="https://www.linkedin.com/in/chaeyeonggracekim/" target="_blank">Grace C. Kim</a>, <a href="https://alexkarpekov.com/" target="_blank">Alexander Karpekov</a>, <a href="https://alechelbling.com/" target="_blank">Alec Helbling</a>, <a href="https://zijie.wang/" target="_blank">Jay Wang</a>, <a href="https://seongmin.xyz/" target="_blank">Seongmin Lee</a>, <a href="https://bhoov.com/" target="_blank">Benjamin Hoover</a>, and <a href="https://poloclub.github.io/polochau/" target="_blank">Polo Chau</a> at the Georgia Institute of Technology.
-
-## Citation
-
-```bibTeX
-@article{cho2024transformer,
-  title = {Transformer Explainer: Interactive Learning of Text-Generative Models},
-  shorttitle = {Transformer Explainer},
-  author = {Cho, Aeree and Kim, Grace C. and Karpekov, Alexander and Helbling, Alec and Wang, Zijie J. and Lee, Seongmin and Hoover, Benjamin and Chau, Duen Horng},
-  journal={IEEE VIS Poster},
-  year={2024}
-}
-```
-
-## License
-
-The software is available under the [MIT License](https://github.com/poloclub/transformer-explainer/blob/main/LICENSE).
-
-## Contact
-
-If you have any questions, feel free to [open an issue](https://github.com/poloclub/transformer-explainer/issues/new/choose) or contact [Aeree Cho](https://aereeeee.github.io/) or any of the contributors listed above.
-
-## More AI explainers to check out
-
-- [**Diffusion Explainer**](https://poloclub.github.io/diffusion-explainer) for learning how Stable Diffusion transforms text prompt into image
-- [**CNN Explainer**](https://poloclub.github.io/cnn-explainer)
-- [**GAN Lab**](https://poloclub.github.io/ganlab) for playing with Generative Adversarial Networks in browser
+## 致谢
+- 原项目 poloclub/transformer-explainer
+- 中文模型 uer/gpt2-chinese-cluecorpussmall
