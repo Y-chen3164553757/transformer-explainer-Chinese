@@ -91,9 +91,10 @@ export const finalTokenIndex = writable(null);
 
 // Visual element style
 export const rootRem = 16;
-export const minVectorHeight = 12;
-export const maxVectorHeight = 30;
-export const maxVectorScale = 3.4;
+/** 中文等宽字符需要略大的行高，避免标签与向量块挤在一起 */
+export const minVectorHeight = 15;
+export const maxVectorHeight = 32;
+export const maxVectorScale = 3.05;
 
 export const vectorHeight = writable(0);
 export const headContentHeight = writable(0);

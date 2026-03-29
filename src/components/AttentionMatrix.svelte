@@ -42,12 +42,12 @@
 		$modelData?.outputs?.[`block_${$blockIdx}_attn_head_${$attentionHeadIdx}_attn_dropout`]?.data ||
 		placeHolderData;
 
-	let factor = 1; //todo
-	let maxCellSize = 20 * factor;
-	let minCellSize = 10 * factor;
+	let factor = 1.08;
+	let maxCellSize = 22 * factor;
+	let minCellSize = 12 * factor;
 	$: cellSize = Math.min(
 		maxCellSize,
-		Math.max((1 / $tokens.length) * rootRem * 6 * factor, minCellSize)
+		Math.max((1 / $tokens.length) * rootRem * 6.5 * factor, minCellSize)
 	);
 
 	let attentionQK: HTMLDivElement;
@@ -344,8 +344,8 @@
 				showSize={false}
 				cellHeight={cellSize}
 				cellWidth={cellSize}
-				rowGap={3}
-				colGap={3}
+				rowGap={5}
+				colGap={5}
 				shape={'circle'}
 				colorScale={qkColorScale}
 				{onMouseOverCell}
@@ -395,8 +395,8 @@
 					showSize={false}
 					cellHeight={cellSize}
 					cellWidth={cellSize}
-					rowGap={3}
-					colGap={3}
+					rowGap={5}
+					colGap={5}
 					shape={'circle'}
 					colorScale={qkColorScale}
 					{onMouseOverCell}
@@ -409,8 +409,8 @@
 					showSize={false}
 					cellHeight={cellSize}
 					cellWidth={cellSize}
-					rowGap={3}
-					colGap={3}
+					rowGap={5}
+					colGap={5}
 					shape={'circle'}
 					colorScale={maskedColorScale}
 					{onMouseOverCell}
@@ -463,8 +463,8 @@
 					showSize={false}
 					cellHeight={cellSize}
 					cellWidth={cellSize}
-					rowGap={3}
-					colGap={3}
+					rowGap={5}
+					colGap={5}
 					shape={'circle'}
 					colorScale={maskedColorScale}
 					{onMouseOverCell}
@@ -477,8 +477,8 @@
 					showSize={false}
 					cellHeight={cellSize}
 					cellWidth={cellSize}
-					rowGap={3}
-					colGap={3}
+					rowGap={5}
+					colGap={5}
 					shape={'circle'}
 					colorScale={softmaxColorScale}
 					{onMouseOverCell}
@@ -513,8 +513,8 @@
 				showSize={false}
 				cellHeight={cellSize}
 				cellWidth={cellSize}
-				rowGap={3}
-				colGap={3}
+				rowGap={5}
+				colGap={5}
 				shape={'circle'}
 				colorScale={softmaxColorScale}
 				{onMouseOverCell}
@@ -551,6 +551,8 @@
 		.matrix-label {
 			white-space: nowrap;
 			color: theme('colors.gray.400');
+			font-size: 0.92rem;
+			line-height: 1.35;
 		}
 		.attention-result {
 			.matrix-label:hover {

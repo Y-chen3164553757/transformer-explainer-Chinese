@@ -75,7 +75,7 @@
 
 							{#each $tokens as token, index}
 								<div
-									class="head1 key cell x1-12 text-xs"
+									class="head1 key cell x1-12 token-row-label"
 									class:last={index === $tokens.length - 1}
 									class:active={$hoveredMatrixCell.col === index}
 								>
@@ -92,7 +92,7 @@
 							<div class="head1 title"><TextbookTooltip id="qkv">Query</TextbookTooltip></div>
 							{#each $tokens as token, index}
 								<div
-									class="head1 cell x1-12 query text-xs"
+									class="head1 cell x1-12 query token-row-label"
 									class:last={index === $tokens.length - 1}
 									class:active={$hoveredMatrixCell.row === index}
 								>
@@ -111,7 +111,7 @@
 						<div class="column value">
 							<div class="head1 title"><TextbookTooltip id="qkv">Value</TextbookTooltip></div>
 							{#each $tokens as token, index}
-								<div class="head1 cell x1-12 text-xs" class:last={index === $tokens.length - 1}>
+								<div class="head1 cell x1-12 token-row-label" class:last={index === $tokens.length - 1}>
 									<span class="label float">{token}</span>
 									<div class={`vector x1-12 ${valHeadVectorColor}`}></div>
 								</div>
@@ -178,16 +178,17 @@
 		}
 		.column {
 			.label {
-				font-size: 0.7rem;
+				font-size: 1rem;
+				line-height: 1.35;
 				color: theme('colors.gray.600');
 			}
 			.title {
 				z-index: $COLUMN_TITLE_INDEX;
 				position: absolute;
-				top: -1.7rem;
+				top: -1.85rem;
 				left: 50%;
 				transform: translateX(-50%);
-				font-size: 0.9rem;
+				font-size: 0.95rem;
 				transition: none;
 			}
 			&.query .title {
@@ -212,12 +213,13 @@
 			}
 		}
 		.heads {
-			padding: 0 7rem 0 8rem;
+			padding: 0 7rem 0 11rem;
 
 			.head1.cell {
 				.label {
 					height: auto;
-					line-height: 1;
+					min-height: 1.1em;
+					line-height: 1.35;
 				}
 				&.active {
 					&.query {

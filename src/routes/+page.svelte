@@ -174,7 +174,7 @@
 	let titleHeight = rootRem * 5;
 
 	const calculateVectorHeight = () => {
-		const gaps = rootRem * 0.5 * ($tokens.length - 1);
+		const gaps = rootRem * 0.58 * ($tokens.length - 1);
 		const vectorHeightVal = Math.min(
 			Math.max((vizHeight - titleHeight - gaps) / $tokens.length / maxVectorScale, minVectorHeight),
 			maxVectorHeight
@@ -408,7 +408,7 @@
 	:global(.column) {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 0.65rem;
 		position: relative;
 
 		:global(.cell) {
@@ -424,7 +424,8 @@
 			top: 0;
 			transform: translateY(calc(-100% - 1rem));
 			text-align: center;
-			font-size: 0.8rem;
+			font-size: 0.88rem;
+			line-height: 1.35;
 			color: theme('colors.gray.400');
 			width: 100%;
 			z-index: $COLUMN_TITLE_INDEX;
@@ -468,22 +469,28 @@
 	}
 
 	:global(.label) {
-		font-size: 0.9rem;
+		font-size: 1.05rem;
+		line-height: 1.35;
 		color: theme('colors.gray.700');
 		z-index: $VECTOR_INDEX;
-		display: inline;
-		max-width: 7rem;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		display: inline-flex;
+		align-items: center;
+		justify-content: flex-end;
+		max-width: 11rem;
+		min-width: 0.5em;
+		overflow: visible;
 		text-align: right;
-		line-height: var(--vector-height);
-		height: var(--vector-height);
+		white-space: nowrap;
+		min-height: var(--vector-height);
+		height: auto;
 		flex-shrink: 0;
+		font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 	}
 	:global(.label.float) {
 		position: absolute;
-		left: -0.8rem;
+		left: -0.35rem;
 		transform: translateX(-100%);
+		padding-right: 0.2rem;
 	}
 	:global(.label.float-right) {
 		position: absolute;
@@ -524,7 +531,7 @@
 		color: theme('colors.gray.600') !important;
 		border: 1px solid theme('colors.gray.200') !important;
 		padding: 0.2rem 0.5rem !important;
-		font-size: 0.8rem !important;
+		font-size: 0.88rem !important;
 		white-space: nowrap;
 		font-weight: 300 !important;
 		border-color: theme('colors.gray.200') !important;

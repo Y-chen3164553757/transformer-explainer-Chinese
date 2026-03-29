@@ -350,6 +350,8 @@
 			white-space: nowrap;
 			text-align: center;
 			font-weight: 500;
+			font-size: 0.92rem;
+			line-height: 1.35;
 		}
 
 		button {

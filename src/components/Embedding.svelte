@@ -350,8 +350,15 @@
 			}
 
 			.token-string {
-				width: 7rem;
+				width: 10rem;
 				flex-shrink: 0;
+
+				:global(.label) {
+					font-size: 1.08rem;
+					line-height: 1.4;
+					justify-content: flex-start;
+					text-align: left;
+				}
 			}
 
 			.subtitle {

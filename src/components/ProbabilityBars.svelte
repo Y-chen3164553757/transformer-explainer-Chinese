@@ -77,8 +77,8 @@
 			.attr('x', (d) => 0.4 * rootRem + xScale(d.probability))
 			.attr('dy', rootRem)
 			.attr('text-anchor', 'start')
-			.style('font-size', '0.95rem')
-			.style('letter-spacing', '-0.02em')
+			.style('font-size', '1.05rem')
+			.style('letter-spacing', '0')
 			// .style('font-family', 'monospace')
 			.transition()
 			.duration(500)
@@ -152,7 +152,7 @@
 
 <style lang="scss">
 	.probability-col {
-		min-width: 6rem;
+		min-width: 7.5rem;
 		z-index: $COLUMN_TITLE_INDEX;
 		user-select: none;
 

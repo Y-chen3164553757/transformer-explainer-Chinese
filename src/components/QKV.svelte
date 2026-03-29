@@ -140,7 +140,7 @@
 				}
 				.sub-vector {
 					user-select: none;
-					font-size: 1rem;
+					font-size: 1.08rem;
 					span {
 						opacity: 0.3;
 					}

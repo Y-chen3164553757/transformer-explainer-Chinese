@@ -78,7 +78,7 @@
 
 <div
 	data-id="matrix"
-	class={classNames(className, 'matrix-container flex flex-col items-center gap-1 leading-none')}
+	class={classNames(className, 'matrix-container flex flex-col items-center gap-1 leading-snug')}
 >
 	{#if title && titlePos === 't'}
 		<div class="leading-none">{title}</div>

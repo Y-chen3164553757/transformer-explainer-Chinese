@@ -307,8 +307,8 @@
 
 <style lang="scss">
 	:global(.cell-text) {
-		font-size: 0.6rem;
-		font-family: monospace;
+		font-size: 0.78rem;
+		font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
 		text-anchor: middle;
 	}
 
