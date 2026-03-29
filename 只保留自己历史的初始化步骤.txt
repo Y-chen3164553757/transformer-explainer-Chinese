@@ -1,0 +1,26 @@
+# 只保留自己历史的 Git 初始化步骤
+
+1. （可选）备份当前项目目录。
+
+2. 在项目根目录执行：
+
+   删除原有 git 历史：
+   ```bash
+   rm -rf .git
+   ```
+
+3. 重新初始化 git 仓库：
+   ```bash
+   git init
+   git add .
+   git commit -m "初始化：Transformer Explainer 中文版，软著归本人所有"
+   git branch -M main
+   git remote add origin https://github.com/Y-chen3164553757/transformer-explainer-Chinese.git
+   git push -u --force origin main
+   ```
+
+4. 推送完成后，GitHub 仓库将只显示你自己的提交和身份，原作者信息全部消失。
+
+---
+
+如需保留部分历史或有特殊需求，请提前备份！
