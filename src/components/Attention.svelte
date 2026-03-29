@@ -66,10 +66,10 @@
 		<div class="heads">
 			<HeadStack>
 				<div
-					class="head-block flex w-full items-center justify-between px-2"
-					style={`height:${$headContentHeight}px;`}
+					class="head-block attention-head-row flex w-full items-start justify-between gap-3 px-2"
+					style={`min-height:${$headContentHeight}px;`}
 				>
-					<div class="qkv flex h-full flex-col justify-center gap-[5rem] pl-[6rem]">
+					<div class="qkv attention-qkv flex min-h-0 flex-col justify-start self-start pl-[5rem]">
 						<div class="column key">
 							<div class="head1 title"><TextbookTooltip id="qkv">Key</TextbookTooltip></div>
 
@@ -125,10 +125,10 @@
 							>
 						</div>
 					</div>
-					<div class="resize-watch attention-matrix flex">
+					<div class="resize-watch attention-matrix attention-matrix-wrap flex shrink-0 self-start">
 						<AttentionMatrix />
 					</div>
-					<div class="head-out mx-[2rem]">
+					<div class="head-out mx-[2rem] self-start">
 						<div class="column out">
 							<div class="head1 title">
 								<TextbookTooltip id="output-concatenation">Out</TextbookTooltip>
@@ -185,10 +185,12 @@
 			.title {
 				z-index: $COLUMN_TITLE_INDEX;
 				position: absolute;
-				top: -1.85rem;
+				top: -2.1rem;
 				left: 50%;
 				transform: translateX(-50%);
-				font-size: 0.95rem;
+				font-size: 1rem;
+				font-weight: 600;
+				letter-spacing: 0.03em;
 				transition: none;
 			}
 			&.query .title {
@@ -213,7 +215,42 @@
 			}
 		}
 		.heads {
-			padding: 0 7rem 0 11rem;
+			padding: 0 6rem 0 11rem;
+			overflow: visible;
+
+			.attention-head-row {
+				min-height: min-content;
+				align-items: flex-start;
+			}
+
+			.attention-qkv {
+				gap: 6.5rem;
+				flex-shrink: 0;
+				/* 顶部对齐，避免在矩阵较高时垂直居中导致上方大块留白、底部 Value 被裁切 */
+				justify-content: flex-start;
+
+				.column {
+					gap: 0.88rem;
+				}
+
+				.head1.cell {
+					box-sizing: border-box;
+					padding-top: 0.12rem;
+					padding-bottom: 0.12rem;
+					align-items: center;
+
+					.label.float {
+						font-size: 1.1rem;
+						line-height: 1.5;
+						letter-spacing: 0.02em;
+					}
+				}
+			}
+
+			.attention-matrix-wrap {
+				padding: 0 0.75rem;
+				align-items: flex-start;
+			}
 
 			.head1.cell {
 				.label {

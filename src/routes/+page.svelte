@@ -180,7 +180,13 @@
 			maxVectorHeight
 		);
 		vectorHeight.set(vectorHeightVal);
-		headContentHeight.set(Math.max($tokens.length * vectorHeightVal * 3 + gaps, rootRem * 20));
+		// Attention 中间区：Key / Query / Value 三列竖向叠放，列内 token 间距 + 列与列之间 gap（与 Attention.svelte 中 gap 一致）
+		const tokenGapPx = rootRem * 0.88;
+		const columnH =
+			$tokens.length * vectorHeightVal + Math.max(0, $tokens.length - 1) * tokenGapPx;
+		const qkvBetweenBlocksPx = 6.5 * rootRem;
+		const qkvStackHeight = 3 * columnH + 2 * qkvBetweenBlocksPx;
+		headContentHeight.set(Math.max(qkvStackHeight, columnH, rootRem * 22));
 	};
 
 	$: if (vizHeight || $tokens.length) {
