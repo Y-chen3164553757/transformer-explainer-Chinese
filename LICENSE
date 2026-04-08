@@ -1,24 +1,13 @@
-MIT License
+Proprietary License
 
-Copyright (c) 2026 Y-chen3164553757
+Copyright (c) 2026 Y-chen3164553757. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This software and its source code, documentation, and data are the exclusive
+property of the copyright holder. Unauthorized copying, distribution,
+modification, or commercial use of this software, in whole or in part, is
+strictly prohibited without prior written permission from the copyright holder.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+For licensing inquiries or collaboration, please contact the author directly.
 
 -------------------------------------------------------------------------------
 
@@ -27,10 +16,15 @@ This project is based on the following open-source projects:
 1. poloclub/transformer-explainer (https://github.com/poloclub/transformer-explainer)
    Copyright (c) poloclub
    Licensed under the MIT License
+   https://github.com/poloclub/transformer-explainer/blob/main/LICENSE
 
 2. uer/gpt2-chinese-cluecorpussmall (https://huggingface.co/uer/gpt2-chinese-cluecorpussmall)
    Copyright (c) UER Team
-   Licensed under the MIT License
+   Licensed under the Apache License, Version 2.0
+   https://www.apache.org/licenses/LICENSE-2.0
 
-The original copyright notices and MIT license terms for the above projects
+The original copyright notices and license terms for the above projects
 are preserved in their respective source files.
+
+NOTE: Use of the Chinese GPT-2 model weights is subject to the Apache License 2.0.
+This includes any redistribution of the model weights or derivative works thereof.
