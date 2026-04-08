@@ -7,7 +7,8 @@ import {
 	isModelRunning,
 	predictedToken,
 	modelSession,
-	modelMetaMap
+	defaultModelId,
+	getRuntimeModelMeta
 } from '~/store';
 import { get } from 'svelte/store';
 import { reshapeArray } from './array';
@@ -340,10 +341,12 @@ function randomChoice(items: Probabilities): Probability {
 	return items[items.length - 1];
 }
 
-const attentionTensors = Array(modelMetaMap.gpt2.layer_num)
+const runtimeModelMeta = getRuntimeModelMeta(defaultModelId);
+
+const attentionTensors = Array(runtimeModelMeta.layer_num)
 	.fill(0)
 	.flatMap((_, i) => {
-		return Array(modelMetaMap.gpt2.attention_head_num)
+		return Array(runtimeModelMeta.attention_head_num)
 			.fill(0)
 			.flatMap((_, j) => [
 				`block_${i}_attn_head_${j}_attn`,

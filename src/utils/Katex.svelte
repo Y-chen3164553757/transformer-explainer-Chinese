@@ -3,7 +3,7 @@
 
 	export let math;
 	export let displayMode = false;
-	export let style;
+	export let style = undefined;
 
 	const options = {
 		displayMode,

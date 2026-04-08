@@ -19,7 +19,10 @@
 		isOnBlockTransition,
 		blockIdx,
 		isTextbookOpen,
-		userId
+		userId,
+		selectedModel,
+		getRuntimeModelMeta,
+		getModelChunkUrls
 	} from '~/store';
 	import { PreTrainedTokenizer } from '@xenova/transformers';
 	import Sankey from '~/components/Sankey.svelte';
@@ -57,7 +60,8 @@
 
 	// fetch model
 	onMount(async () => {
-		const gpt2Tokenizer = await AutoTokenizer.from_pretrained('bert-base-chinese');
+		const runtimeModelMeta = getRuntimeModelMeta(get(selectedModel));
+		const gpt2Tokenizer = await AutoTokenizer.from_pretrained(runtimeModelMeta.tokenizerId);
 		active = true;
 
 		const unsubscribe = subscribeInputs(gpt2Tokenizer);
@@ -71,13 +75,14 @@
 
 	// Fetch model onnx
 	const fetchModel = async () => {
-		const chunkNum = 46; //TODO: move to model meta
-		const chunkUrls = Array(chunkNum)
-			.fill(0)
-			.map((d, i) => `${base}/model-v2-chinese/gpt2.onnx.part${i}`);
+		const runtimeModelMeta = getRuntimeModelMeta(get(selectedModel));
+		const chunkUrls = getModelChunkUrls(base, get(selectedModel));
 
 		// Fetch from cache
-		const { hasCache, mergedArray } = await fetchAndMergeChunks(chunkUrls);
+		const { hasCache, mergedArray } = await fetchAndMergeChunks(
+			chunkUrls,
+			runtimeModelMeta.cacheVersion
+		);
 
 		// Create a Blob from the merged array
 		const blob = new Blob([mergedArray], { type: 'application/octet-stream' });

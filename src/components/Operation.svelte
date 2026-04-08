@@ -12,8 +12,8 @@
 	export let active: boolean = false;
 
 	let width = 50;
-	let textElement: SVGTextElement;
-	let textBBox: DOMRect;
+	let textElement: SVGTextElement | undefined;
+	let textBBox: DOMRect | undefined;
 
 	onMount(() => {
 		if (textElement) {

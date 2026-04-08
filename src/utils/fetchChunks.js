@@ -1,11 +1,15 @@
 const CACHE_PREFIX = 'onnx-model-cache';
-const CACHE_NAME = `${CACHE_PREFIX}-v2`;
 
-async function fetchModelChunks(chunkUrls) {
-	await clearOldCaches();
+function getCacheName(cacheVersion = 'v2') {
+	return `${CACHE_PREFIX}-${cacheVersion}`;
+}
+
+async function fetchModelChunks(chunkUrls, cacheVersion = 'v2') {
+	const cacheName = getCacheName(cacheVersion);
+	await clearOldCaches(cacheName);
 
 	let hasCache = false;
-	const cache = await caches.open(CACHE_NAME);
+	const cache = await caches.open(cacheName);
 	const cachedResponses = await Promise.all(chunkUrls.map((url) => cache.match(url)));
 
 	// add cache
@@ -31,8 +35,8 @@ async function fetchModelChunks(chunkUrls) {
 	return { hasCache, modelBuffers };
 }
 
-export async function fetchAndMergeChunks(urls) {
-	const { hasCache, modelBuffers: chunks } = await fetchModelChunks(urls);
+export async function fetchAndMergeChunks(urls, cacheVersion = 'v2') {
+	const { hasCache, modelBuffers: chunks } = await fetchModelChunks(urls, cacheVersion);
 	const totalSize = chunks.reduce((acc, chunk) => acc + chunk.byteLength, 0);
 	const mergedArray = new Uint8Array(totalSize);
 	let offset = 0;
@@ -43,11 +47,11 @@ export async function fetchAndMergeChunks(urls) {
 	return { hasCache, mergedArray: mergedArray.buffer };
 }
 
-async function clearOldCaches() {
+async function clearOldCaches(activeCacheName) {
 	const cacheNames = await caches.keys();
 	await Promise.all(
 		cacheNames.map((name) => {
-			if (name !== CACHE_NAME && name.includes(CACHE_PREFIX)) {
+			if (name !== activeCacheName && name.includes(CACHE_PREFIX)) {
 				console.log(`Deleting old cache: ${name}`);
 				return caches.delete(name);
 			}

@@ -17,7 +17,12 @@ type ModelMetaData = {
 	layer_num: number;
 	attention_head_num: number;
 	dimension: number;
+	vocabSize?: number;
+	tokenizerId?: string;
+	modelDir?: string;
+	chunkFilePrefix?: string;
 	chunkTotal?: number;
+	cacheVersion?: string;
 };
 
 type HighlightedToken = {
@@ -56,3 +61,9 @@ type ModelData = {
 };
 
 type Sampling = { type: 'top-k' | 'top-p'; value: number };
+
+interface Window {
+	dataLayer?: Array<Record<string, unknown>> & {
+		push: (...items: Record<string, unknown>[]) => number;
+	};
+}

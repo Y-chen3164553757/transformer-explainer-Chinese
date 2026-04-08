@@ -20,11 +20,12 @@
 	const valHeadVectorColor = 'bg-green-300';
 
 	// attentionHeadIdx subscribe
-	const headCursors = {};
+	const headCursors: Record<string, HTMLDivElement | null> = {};
 
 	onMount(() => {
 		const unsubscribe = attentionHeadIdx.subscribe(async (newIdx) => {
 			Object.values(headCursors).forEach((el) => {
+				if (!el) return;
 				el.style.top = `${($vectorHeight / $modelMeta.attention_head_num) * newIdx}px`;
 			});
 		});

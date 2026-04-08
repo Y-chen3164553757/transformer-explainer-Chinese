@@ -35,20 +35,20 @@ const { drawLine, removeLine } = drawResidualLine();
 export const textPages: TextbookPage[] = [
 	{
 		id: 'what-is-transformer',
-		title: 'What is Transformer?',
-		content: `<p><strong>Transformer</strong> is the core architecture behind modern AI, powering models like ChatGPT and Gemini. Introduced in 2017, it revolutionized how AI processes information. The same architecture is used for training on massive datasets and for inference to generate outputs. Here we use GPT-2 (small), simpler than newer ones but perfect for learning the fundamentals.</p>
+		title: '什么是 Transformer？',
+		content: `<p><strong>Transformer</strong> 是现代 AI 的核心架构，驱动着 ChatGPT、Gemini 等模型。它在 2017 年提出，彻底改变了 AI 处理信息的方式。同一套架构既可用于海量数据训练，也可用于推理生成输出。这里我们使用的是 GPT-2（small），它虽然比新模型更简单，但非常适合学习基础概念。</p>
 `,
 		on: () => {},
 		out: () => {}
 	},
 	{
 		id: 'how-transformers-work',
-		title: 'How Transformers Work?',
-		content: `<p>Transformers aren't magic—they build text step by step by asking:</p>
+		title: 'Transformer 如何工作？',
+		content: `<p>Transformer 并不神秘。它是通过不断追问下面这个问题，一步一步生成文本的：</p>
 	<blockquote class="question">
-		"What is the most probable next word that will follow this input?"
+		“在当前输入之后，最有可能出现的下一个词是什么？”
 	</blockquote>
-	<p>Here we explore how a trained model generates text. Write your own text or use an example, then click <strong>Generate</strong> to see it in action. If the model isn’t ready yet, try another <strong>Example</strong>.</p>`,
+	<p>这里展示的是训练完成后的模型如何生成文本。你可以输入自己的文本，或直接使用示例，然后点击 <strong>Generate（生成）</strong> 按钮观察它的运行过程。如果模型还没准备好，可以先切换到另一个 <strong>Example（示例）</strong>。</p>`,
 		on: () => {
 			highlightElements(['.input-form']);
 			if (get(isFetchingModel)) {
@@ -77,9 +77,9 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'transformer-architecture',
-		title: 'Transformer Architecture',
+		title: 'Transformer 架构',
 		content:
-			'<p>Transformer has three main parts:</p><div class="numbered-list"><div class="numbered-item"><span class="number-circle">1</span><div class="item-content"><strong>Embeddings</strong> turn text into numbers.</div></div><div class="numbered-item"><span class="number-circle">2</span><div class="item-content"><strong>Transformer blocks</strong> mix information with Self-Attention and refine it with an MLP.</div></div><div class="numbered-item"><span class="number-circle">3</span><div class="item-content"><strong>Probabilities</strong> determine the likelihood of each next token.</div></div></div>',
+			'<p>Transformer 主要由三个部分组成：</p><div class="numbered-list"><div class="numbered-item"><span class="number-circle">1</span><div class="item-content"><strong>词嵌入（Embedding）</strong> 将文本转换为数字表示。</div></div><div class="numbered-item"><span class="number-circle">2</span><div class="item-content"><strong>Transformer 块（Transformer Blocks）</strong> 通过自注意力机制整合信息，再用 MLP 做进一步精炼。</div></div><div class="numbered-item"><span class="number-circle">3</span><div class="item-content"><strong>输出概率（Output Probabilities）</strong> 用来决定下一个词元出现的可能性。</div></div></div>',
 		on: () => {
 			const selectors = [
 				'.step.embedding',
@@ -103,8 +103,8 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'embedding',
-		title: 'Embedding',
-		content: `<p>Before a Transformer can use text, it first breaks it into small units and represents each as a list of numbers (vector). This process is called <strong>embedding</strong>, and the term can refer to both the process and the resulting vector.</p><p>In this tool, each vector appears as a rectangle, and hovering over it shows its size.</p>`,
+		title: '词嵌入（Embedding）',
+		content: `<p>在 Transformer 使用文本之前，它会先把文本拆成更小的单位，并将每个单位表示为一串数字（向量）。这个过程称为<strong>词嵌入（embedding）</strong>，这个词既可以指过程，也可以指最终得到的向量。</p><p>在这个工具中，每个向量都会显示为一个矩形；将鼠标悬停其上时，可以看到它的尺寸。</p>`,
 		on: () => {
 			highlightElements(['.step.embedding .title']);
 		},
@@ -124,8 +124,8 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'token-embedding',
-		title: 'Token Embedding',
-		content: `<p><strong>Tokenization</strong> splits input text into tokens—small units like words or parts of words. GPT-2 (small) has 50,257 token vocabulary, each with a unique ID.</p><p>In the <strong>token embedding</strong> step, every token is matched to a 768-number vector from a large lookup table. These vectors are learned during training to best represent each token’s meaning.</p>`,
+		title: '词元嵌入（Token Embedding）',
+		content: `<p><strong>分词（Tokenization）</strong> 会把输入文本拆分成词元（token），也就是像单词或子词这样的更小单位。GPT-2（small）拥有 50,257 个词元的词汇表，每个词元都有唯一的 ID。</p><p>在<strong>词元嵌入（token embedding）</strong>这一步中，每个词元都会从一个大型查找表中匹配到一个 768 维向量。这些向量是在训练过程中学出来的，用来尽可能准确地表示各个词元的含义。</p>`,
 		on: function () {
 			const selectors = [
 				'.token-column .column.token-string',
@@ -155,8 +155,8 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'positional-encoding',
-		title: 'Positional Encoding',
-		content: `<p>Word order matters in language. <strong>Positional encoding</strong> gives each token information about its place in the sequence.</p><p>GPT-2 does this by adding a learned positional embedding to the token's embedding, but newer models may use other methods, like RoPE, which encodes position by rotating certain vectors. All aim to help the model understand order in text.</p>`,
+		title: '位置编码（Positional Encoding）',
+		content: `<p>在语言中，词序非常重要。<strong>位置编码（Positional Encoding）</strong> 会让每个词元知道自己在序列中的位置。</p><p>GPT-2 的做法，是把一个学得的位置嵌入加到词元嵌入上；而较新的模型可能会采用其他方法，例如 RoPE（旋转位置编码），它通过旋转某些向量来编码位置信息。它们的目标都是帮助模型理解文本中的顺序。</p>`,
 		on: function () {
 			const selectors = [
 				'.token-column .column.position-embedding',
@@ -186,8 +186,8 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'blocks',
-		title: 'Repetitive Transformer Blocks',
-		content: `<p>A <strong>Transformer block</strong> is the main unit of processing in the model. It has two parts:</p><ul><li><strong>Multi-head self-attention</strong> – lets tokens share information</li><li><strong>MLP</strong> – refines each token's details</li></ul><p>Models stack many blocks so token representations become richer as they pass through. GPT-2 (small) has 12 of them.</p>`,
+		title: '重复堆叠的 Transformer 块',
+		content: `<p><strong>Transformer 块（Transformer block）</strong> 是模型中的主要处理单元。它包含两个部分：</p><ul><li><strong>多头自注意力（Multi-head self-attention）</strong>：让词元彼此共享信息</li><li><strong>MLP（多层感知机）</strong>：进一步精炼每个词元的表示</li></ul><p>模型会堆叠多个这样的块，使词元表示在逐层传递的过程中变得更加丰富。GPT-2（small）一共有 12 个这样的块。</p>`,
 		on: function () {
 			this.timeoutId = setTimeout(
 				() => {
@@ -230,9 +230,9 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'self-attention',
-		title: 'Multi-Head Self Attention',
+		title: '多头自注意力（Multi-Head Self-Attention）',
 		content:
-			'<p><strong>Self-attention</strong> lets the model decide which parts of the input are most relevant to each token. This helps it capture meaning and relationships, even between far-apart words.</p><p>In <strong>multi-head</strong> form, the model runs several attention processes in parallel, each focusing on different patterns in the text.</p>',
+			'<p><strong>自注意力（Self-attention）</strong> 让模型判断输入中的哪些部分与当前词元最相关。这使它能够捕捉意义和关系，即使两个词相隔很远也没问题。</p><p>在<strong>多头（multi-head）</strong>形式下，模型会并行运行多个注意力过程，每个头都专注于文本中的不同模式。</p>',
 		on: () => {
 			highlightElements(['.step.attention']);
 		},
@@ -242,16 +242,16 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'qkv',
-		title: 'Query, Key, Value',
+		title: 'Query（查询）、Key（键）、Value（值）',
 		content: `
-	<p>To perform self-attention, each token's embedding is transformed into 
-  <span class="highlight">three new embeddings</span>—
-  <span class="blue">Query</span>,  
-  <span class="red">Key</span>, and  
-  <span class="green">Value</span>.
-  This transformation is done by applying different weights and biases to each token embedding. These parameters (weights and biases), are optimized through training.</p>
+	<p>为了执行自注意力计算，每个词元的嵌入都会被转换成 
+	  <span class="highlight">三个新的嵌入向量</span>——
+	  <span class="blue">Query（查询）</span>、  
+	  <span class="red">Key（键）</span> 和  
+	  <span class="green">Value（值）</span>。
+	 这些新向量是通过对每个词元嵌入应用不同的权重和偏置得到的，而这些参数（权重与偏置）会在训练过程中被优化。</p>
 
-<p>Once created, <span class="blue">Queries</span> compare with <span class="red">Keys</span> to measure relevance, and this relevance is used to weight the <span class="green">Values</span>.</p>
+<p>生成之后，<span class="blue">Query</span> 会与 <span class="red">Key</span> 比较来衡量相关性，而这个相关性分数会进一步用来加权 <span class="green">Value</span>。</p>
 `,
 		on: function () {
 			this.timeoutId = setTimeout(
@@ -283,9 +283,9 @@ export const textPages: TextbookPage[] = [
 
 	{
 		id: 'multi-head',
-		title: 'Multi-head',
+		title: '多头机制（Multi-head）',
 		content:
-			'<p>After creating <span class="blue">Q</span>, <span class="red">K</span>, and <span class="green">V</span> embeddings, the model splits them into several <strong>heads</strong> (12 in GPT-2 small). Each head works with its own smaller set of <span class="blue">Q</span>/<span class="red">K</span>/<span class="green">V</span>, focusing on different patterns in the text—like grammar, meaning, or long-range links.</p><p>Multiple heads let the model learn many kinds of relationships in parallel, making its understanding richer.</p>',
+			'<p>在生成 <span class="blue">Q</span>、<span class="red">K</span> 和 <span class="green">V</span> 嵌入之后，模型会把它们切分成多个<strong>头（heads）</strong>，在 GPT-2 small 中一共是 12 个。每个头都会处理自己那一小部分 <span class="blue">Q</span>/<span class="red">K</span>/<span class="green">V</span>，从而关注文本中的不同模式，例如语法、语义或长距离依赖。</p><p>多个头可以让模型并行学习多种关系，因此对文本的理解也会更加丰富。</p>',
 		on: () => {
 			highlightAttentionPath();
 			highlightElements(['.multi-head .head-title']);
@@ -307,8 +307,8 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'masked-self-attention',
-		title: 'Masked Self Attention',
-		content: `<p>In each head, the model decides how much each token focuses on others:</p><ul><li><strong>Dot Product</strong> – Multiply matching numbers in <span class="blue">Query</span>/<span class="red">Key</span> vectors, sum to get <span class="purple">attention scores</span>.</li><li><strong>Mask</strong> – Hide future tokens so it can't peek ahead.</li><li><strong>Softmax</strong> – Convert scores to probabilities, each row summing to 1, showing focus on earlier tokens.</li></ul>`,
+		title: '掩蔽自注意力（Masked Self-Attention）',
+		content: `<p>在每个头中，模型都会决定每个词元应该关注其他词元到什么程度：</p><ul><li><strong>点积（Dot Product）</strong>：将 <span class="blue">Query</span>/<span class="red">Key</span> 向量中对应位置的数相乘并求和，得到 <span class="purple">注意力分数</span>。</li><li><strong>掩码（Mask）</strong>：遮住未来词元，防止模型提前偷看后面的内容。</li><li><strong>Softmax（归一化函数）</strong>：把分数转换成概率，每一行加起来都等于 1，表示它对前面各词元的关注程度。</li></ul>`,
 		on: () => {
 			highlightAttentionPath();
 			highlightElements(['.attention-matrix.attention-result']);
@@ -331,9 +331,9 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'output-concatenation',
-		title: 'Attention Output & Concatenation',
+		title: '注意力输出与拼接',
 		content:
-			'<p>Each head <span class="highlight">multiplies its <span class="purple">attention scores</span> with the <span class="green">Value</span> embeddings to produce its attention output</span>—a refined representation of each token after considering context.</p><p>GPT-2 (small) has 12 such outputs, which are concatenated to form a single vector of the original size (768 numbers).</p>',
+			'<p>每个头都会<span class="highlight">将自己的 <span class="purple">注意力分数</span> 与 <span class="green">Value</span> 嵌入相乘，从而得到各自的注意力输出</span>。这表示词元在结合上下文之后被重新提炼过的表示。</p><p>GPT-2（small）共有 12 份这样的输出，它们会被拼接起来，组成一个恢复到原始大小的向量（768 个数）。</p>',
 		on: function () {
 			this.timeoutId = setTimeout(
 				() => {
@@ -363,9 +363,9 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'mlp',
-		title: 'MLP (Multi-Layer Perceptron)',
+		title: 'MLP（多层感知机）',
 		content:
-			'<p>The attention output goes through an <strong>MLP</strong> to refine token representations. A Linear layer changes embedding values and size using learned weights and bias, then a non-linear activation decides how much each value passes.</p><p>Many activation types exist; GPT-2 uses <strong>GELU</strong>, which lets small values pass partially and large values pass fully, helping capture both subtle and strong patterns.</p>',
+			'<p>注意力输出会进入一个 <strong>MLP（多层感知机）</strong>，进一步精炼词元表示。线性层会利用学得的权重和偏置改变嵌入的数值与维度，而后续的非线性激活函数则决定每个值能通过多少。</p><p>激活函数有很多种；GPT-2 使用的是 <strong>GELU（高斯误差线性单元）</strong>，它会让较小的值部分通过、较大的值更完整地通过，因此既能保留细微模式，也能保留强烈模式。</p>',
 		on: () => {
 			highlightElements(['.step.mlp', '.operation-col.activation']);
 		},
@@ -376,8 +376,8 @@ export const textPages: TextbookPage[] = [
 
 	{
 		id: 'output-logit',
-		title: 'Output Logit',
-		content: `<p>After all Transformer blocks, the last token's output embedding, enriched with context from all previous tokens, is multiplied by learned weights in a final layer.</p><p>This produces <strong>logits</strong>, 50,257 numbers—one for each token in GPT-2’s vocabulary—that indicate how likely each token is to come next.</p>`,
+		title: '输出 Logit（未归一化分数）',
+		content: `<p>经过所有 Transformer 块之后，最后一个词元的输出嵌入已经整合了之前所有词元的上下文信息，它会在最终层中与学得的权重相乘。</p><p>这会产生 <strong>logits（未归一化分数）</strong>，也就是 50,257 个数，对应 GPT-2 词汇表中的每一个词元，用来表示各个词元作为下一个输出的可能性有多大。</p>`,
 		on: () => {
 			highlightElements(['g.path-group.softmax', '.column.final']);
 		},
@@ -398,9 +398,9 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'output-probabilities',
-		title: 'Probabilities',
+		title: '概率（Probabilities）',
 		content:
-			'<p>Logits are just raw scores. To make them easier to interpret, we convert them into <strong>probabilities</strong> between 0 and 1, where all add up to 1. This tells us the likelihood of each token being the next word.</p><p>Instead of always picking the highest-probability token, we can use different selection strategies to balance safety and creativity in the generated text.</p>',
+			'<p>Logits（未归一化分数）只是原始分数。为了让它们更容易理解，我们会把它们转换成 0 到 1 之间的<strong>概率（Probabilities）</strong>，并且所有概率加起来等于 1。这就表示每个词元成为下一个词的可能性。</p><p>我们不一定总是选择概率最高的词元，也可以采用不同的选择策略，在生成文本时平衡确定性与多样性。</p>',
 		on: () => {
 			highlightElements(['.step.softmax .title']);
 		},
@@ -420,9 +420,9 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'temperature',
-		title: 'Temperature',
+		title: '温度（Temperature）',
 		content:
-			'<p><strong>Temperature</strong> works by scaling the logits before turning them into probabilities. A <strong>low temperature</strong> (e.g., 0.2) makes large logits even larger and small ones smaller, favoring the highest-scoring tokens and leading to more <strong>predictable choices</strong>. A <strong>high temperature</strong> (e.g., 1.0 or above) flattens the differences, making less likely tokens more competitive and leading to more <strong>creative outputs</strong>.</p>',
+			'<p><strong>温度（Temperature）</strong> 的作用，是在把 logits（未归一化分数）转成概率之前先对它们进行缩放。<strong>低温</strong>（例如 0.2）会让大的 logits 更大、小的更小，更偏向最高分词元，因此输出更<strong>可预测</strong>。<strong>高温</strong>（例如 1.0 或更高）会缩小差距，让低概率词元也更有机会被选中，因此输出会更<strong>具多样性</strong>。</p>',
 		on: function () {
 			if (get(expandedBlock).id !== 'softmax') {
 				expandedBlock.set({ id: 'softmax' });
@@ -470,9 +470,9 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'sampling',
-		title: 'Sampling Strategy',
+		title: '采样策略（Sampling Strategy）',
 		content:
-			'<p>Finally, we need a strategy to pick the next token. Many exist, but here are common ones: Greedy search picks the top one. <strong>Top-k</strong> keeps only the k most likely tokens, and <strong>top-p</strong> keeps the smallest set whose total probability is at least p—trimming unlikely ones early.</p><p>Then softmax turns the remaining logits into probabilities, and one token is picked at random from the allowed set.</p>',
+			'<p>最后，我们还需要一种策略来选出下一个词元。方法有很多，这里展示几种常见方式：贪心搜索（Greedy Search）直接选概率最高的那个；<strong>Top-k（前 k 采样）</strong> 只保留概率最高的前 k 个词元；<strong>Top-p（核采样）</strong> 则保留累计概率至少达到 p 的最小词元集合，从而尽早剔除明显不可能的候选。</p><p>之后，softmax（归一化函数）会把剩余 logits 转成概率，再从允许的候选集合中随机选出一个词元。</p>',
 		on: function () {
 			if (get(expandedBlock).id !== 'softmax') {
 				expandedBlock.set({ id: 'softmax' });
@@ -520,8 +520,8 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'residual',
-		title: 'Residual Connection',
-		content: `<p>Transformers have auxiliary features that enhance the model performance. For example, a <strong>residual connection</strong> adds a layer's input to its output, keeping information from fading through many blocks. In GPT-2, it's used twice per block to train deeper stacks effectively.</p>`,
+		title: '残差连接（Residual Connection）',
+		content: `<p>Transformer 还包含一些能提升模型性能的辅助特性。例如，<strong>残差连接（residual connection）</strong> 会把某一层的输入直接加到它的输出上，避免信息在经过很多层之后逐渐衰减。在 GPT-2 中，每个块都会使用两次残差连接，以便更有效地训练更深的堆叠结构。</p>`,
 		on: function () {
 			this.timeoutId = setTimeout(
 				() => {
@@ -542,8 +542,8 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'layer-normalization',
-		title: 'Layer Normalization',
-		content: `<p><strong>Layer Normalization</strong> helps stabilize both training and inference by adjusting input numbers so their mean and variance stay consistent. This makes the model less sensitive to its starting weights and helps it learn more effectively. In GPT-2, it's applied before self-attention, before the MLP, and once more before the final output.</p>`,
+		title: '层归一化（Layer Normalization）',
+		content: `<p><strong>层归一化（Layer Normalization）</strong> 通过调整输入数值，使其均值和方差保持稳定，从而帮助稳定训练与推理过程。这会降低模型对初始权重的敏感性，也让学习过程更高效。在 GPT-2 中，它会用在自注意力之前、MLP 之前，以及最终输出之前的一次归一化步骤中。</p>`,
 		on: () => {
 			highlightElements(['.operation-col.ln']);
 		},
@@ -553,8 +553,8 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'dropout',
-		title: 'Dropout',
-		content: `<p>During training, <strong>dropout</strong> randomly turns off some connections between numbers so the model doesn't overfit to specific patterns. This helps it learn features that generalize better. GPT-2 uses it, but newer LLMs often skip it because they train on huge datasets and overfitting is less of a problem. In inference, dropout is turned off.</p>`,
+		title: 'Dropout（随机失活）',
+		content: `<p>在训练过程中，<strong>dropout（随机失活）</strong> 会随机关闭一部分连接，避免模型对某些特定模式过拟合。这有助于它学到更具泛化能力的特征。GPT-2 使用了 dropout，但较新的大语言模型往往会省略它，因为它们基于极大的数据集训练，过拟合通常不是那么突出的问题。在推理阶段，dropout 会被关闭。</p>`,
 		on: () => {
 			highlightElements(['.operation-col.dropout']);
 		},

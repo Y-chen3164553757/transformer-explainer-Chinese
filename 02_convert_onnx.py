@@ -1,12 +1,4 @@
-"""
-Step 2: 将 uer/gpt2-chinese-cluecorpussmall 转换为 ONNX 格式
-
-策略：复用项目内 src/utils/model/model.py 的自定义 nanoGPT 架构，
-      加载中文 GPT-2 权重，opset=11 + dynamo=False（TorchScript 路径）。
-      输出格式与英文 ONNX 模型完全一致，前端代码无需任何修改。
-
-依赖（已有）：torch, transformers, onnxruntime  -- 无需安装任何新包
-"""
+"""Step 2: 使用共享配置将中文 GPT-2 转换为前端兼容的 ONNX。"""
 
 import sys, os, json
 import numpy as np
@@ -14,8 +6,11 @@ import torch
 import torch.nn as nn
 
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR  = os.path.join(BASE_DIR, "models", "gpt2-chinese-cluecorpussmall")
-OUTPUT_DIR = os.path.join(BASE_DIR, "models", "gpt2-chinese-onnx")
+with open(os.path.join(BASE_DIR, "model-config.json"), encoding="utf-8") as f:
+    MODEL_CONFIG = json.load(f)
+
+MODEL_DIR  = os.path.join(BASE_DIR, MODEL_CONFIG["paths"]["localModelDir"])
+OUTPUT_DIR = os.path.join(BASE_DIR, MODEL_CONFIG["paths"]["onnxOutputDir"])
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # 复用项目内已有的自定义 nanoGPT 架构（原英文模型已用此架构成功导出）
@@ -32,6 +27,12 @@ N_HEAD  = cfg["n_head"]     # 12
 N_EMBD  = cfg["n_embd"]     # 768
 VOCAB   = cfg["vocab_size"] # 21128
 print(f"模型配置: {N_LAYER}层 / {N_HEAD}头 / {N_EMBD}维 / vocab={VOCAB}")
+
+expected = MODEL_CONFIG["runtime"]
+assert N_LAYER == expected["layerCount"], f"层数不匹配: {N_LAYER} != {expected['layerCount']}"
+assert N_HEAD == expected["headCount"], f"头数不匹配: {N_HEAD} != {expected['headCount']}"
+assert N_EMBD == expected["embeddingDim"], f"维度不匹配: {N_EMBD} != {expected['embeddingDim']}"
+assert VOCAB == expected["vocabSize"], f"词表大小不匹配: {VOCAB} != {expected['vocabSize']}"
 
 # ── 2. 创建 nanoGPT 骨架并加载中文权重 ───────────────────────────
 print("\n1/3  加载权重并导出 ONNX...")
@@ -121,7 +122,7 @@ output_names = [
 output_names.append("linear_output")
 
 # ── 5. 导出 ONNX（opset=11, dynamo=False, TorchScript 路径）──────
-onnx_path   = os.path.join(OUTPUT_DIR, "model.onnx")
+onnx_path   = os.path.join(OUTPUT_DIR, MODEL_CONFIG["paths"]["onnxFileName"])
 dummy_input = torch.tensor([[791, 2158, 1990, 5057, 2167]])  # 随意 5 个 token
 
 with torch.no_grad():

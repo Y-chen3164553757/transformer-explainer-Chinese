@@ -1,5 +1,6 @@
 <script lang="ts">
 	import classNames from 'classnames';
+	import type { BaseType } from 'd3';
 	import MatrixSvg from './MatrixSvg.svelte';
 
 	export let data: number[][];
@@ -12,7 +13,7 @@
 
 	export let groupBy: 'row' | 'col' = 'row';
 	export let shape: 'circle' | 'rect' = 'rect';
-	export let colorScale: string | ((t: number) => any) | undefined = undefined;
+	export let colorScale: string | ((t: number, i: number) => any) | undefined = undefined;
 
 	export let className: string | undefined = undefined;
 	export let title: string | undefined = undefined;
@@ -23,26 +24,26 @@
 	export let onMouseOverCell: (
 		event: Event,
 		data: any,
-		el?: SVGRectElement | d3.BaseType
-	) => void | undefined;
+		el?: SVGRectElement | BaseType
+	) => void | undefined = undefined;
 	export let onMouseOutCell: (
 		event: Event,
 		data: any,
-		el?: SVGRectElement | d3.BaseType
-	) => void | undefined;
+		el?: SVGRectElement | BaseType
+	) => void | undefined = undefined;
 	export let onMouseOutSvg: (
 		event: Event,
 		data: any,
-		el?: SVGRectElement | d3.BaseType
-	) => void | undefined;
+		el?: SVGRectElement | BaseType
+	) => void | undefined = undefined;
 	export let showTooltip: (
 		event: Event,
 		data: any,
-		el: SVGRectElement | d3.BaseType
-	) => string | undefined;
+		el: SVGRectElement | BaseType
+	) => string | undefined = undefined;
 
-	export let highlightRow: number | undefined;
-	export let highlightCol: number | undefined;
+	export let highlightRow: number | undefined = undefined;
+	export let highlightCol: number | undefined = undefined;
 
 	let rowLen: number = 0;
 	let dimension: number = 0;

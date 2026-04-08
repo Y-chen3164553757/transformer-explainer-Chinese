@@ -14,8 +14,8 @@
 	export let goTo: string | undefined = undefined;
 	export let reference: PopoverProps['reference'] | undefined = undefined;
 
-	let startTime;
-	const onShow = (e) => {
+	let startTime: number | undefined = undefined;
+	const onShow = (e: Event) => {
 		startTime = e.timeStamp;
 		window.dataLayer?.push({
 			event: 'visibility-show',
@@ -24,7 +24,7 @@
 			user_id: $userId
 		});
 	};
-	const onHide = (e) => {
+	const onHide = (e: Event) => {
 		window.dataLayer?.push({
 			event: 'visibility-hide',
 			visible_name: `help-popover-${className}`,
@@ -55,7 +55,8 @@
 	<div class="content">
 		<slot></slot>
 		{#if goTo}
-			<div
+			<button
+				type="button"
 				class="more-btn mt-1 text-blue-600 hover:underline"
 				on:click={(e) =>
 					onClickReadMore(e, goTo, {
@@ -64,7 +65,7 @@
 				data-click={`read-more-btn-${className}`}
 			>
 				Read more
-			</div>
+			</button>
 		{/if}
 	</div></Popover
 >

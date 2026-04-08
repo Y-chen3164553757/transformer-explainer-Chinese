@@ -21,8 +21,8 @@
 	import { ga } from '~/utils/event';
 	import { EyeOutline, ZoomInOutline } from 'flowbite-svelte-icons';
 	import { fade } from 'svelte/transition';
-	import SoftmaxPopover from './popovers/SoftmaxPopover.svelte';
-	import LogitWeightPopover from './popovers/LogitWeightPopover.svelte';
+	import SoftmaxPopover from './Popovers/SoftmaxPopover.svelte';
+	import LogitWeightPopover from './Popovers/LogitWeightPopover.svelte';
 	import { textPages } from '~/utils/textbookPages';
 	import TextbookTooltip from '~/components/common/TextbookTooltip.svelte';
 
@@ -30,7 +30,7 @@
 
 	setContext('block-id', 'softmax');
 
-	const blockId = getContext('block-id');
+	const blockId = getContext<string>('block-id');
 
 	let isSoftmaxExpanded = false;
 	let showLogitPopover = false;
@@ -51,7 +51,7 @@
 		}
 	};
 
-	const onClickSoftmaxTitle = (e) => {
+	const onClickSoftmaxTitle = (e: MouseEvent) => {
 		e.stopPropagation();
 		e.preventDefault();
 		textPages.find((page) => page.id === 'output-probabilities')?.out();
@@ -66,15 +66,16 @@
 	};
 	let expandableEl: HTMLDivElement;
 
-	function handleOutsideClick(e) {
-		if (isSoftmaxExpanded && !expandableEl.contains(e.target)) {
+	function handleOutsideClick(e: Event) {
+		if (isSoftmaxExpanded && !expandableEl.contains(e.target as Node)) {
 			expandedBlock.set({ id: null });
 		}
 	}
 	onMount(() => {
-		document.querySelector('.main-section').addEventListener('click', handleOutsideClick);
+		const mainSection = document.querySelector('.main-section');
+		mainSection?.addEventListener('click', handleOutsideClick);
 		return () => {
-			document.querySelector('.main-section').removeEventListener('click', handleOutsideClick);
+			mainSection?.removeEventListener('click', handleOutsideClick);
 		};
 	});
 
@@ -84,7 +85,7 @@
 	let drawBars: () => void;
 
 	// google analytics
-	let startTime = null;
+	let startTime: number | null = null;
 
 	const expandSoftmax = async () => {
 		containerState = Flip.getState('.softmax .softmax-detail.expandable');
@@ -121,7 +122,7 @@
 
 	const collapseSoftmax = async () => {
 		let endTime = performance.now();
-		let visibleDuration = endTime - startTime;
+		let visibleDuration = endTime - (startTime ?? endTime);
 
 		window.dataLayer?.push({
 			event: 'visibility-hide',
@@ -171,7 +172,7 @@
 	// top-p
 	$: topPProbabilities = data?.map((d) => d.topPProbability) || [];
 	$: cumulativeProbabilities = data?.map((d) => d.cumulativeProbability) || [];
-	$: cutoffIndex = data?.[0].cutoffIndex;
+	$: cutoffIndex = data?.[0].cutoffIndex ?? -1;
 
 	let isHovered = false;
 
@@ -183,7 +184,7 @@
 		isHovered = false;
 	}
 
-	const onClickLogits = (e) => {
+	const onClickLogits = (e: MouseEvent) => {
 		e.stopPropagation();
 		e.preventDefault();
 		showLogitPopover = !showLogitPopover;
@@ -250,13 +251,14 @@
 						<div class="title-text">Tokens</div>
 					</div>
 					<div class="title-box logits">
-						<div
+						<button
+							type="button"
 							class="title-text btn shadow-sm"
 							on:click={onClickLogits}
 							data-click="prob-expansion-logit-btn"
 						>
 							Logits <EyeOutline class="icon text-gray-400" size="sm" />
-						</div>
+						</button>
 					</div>
 					<div class="title-box scaled">
 						<TextbookTooltip id="temperature"
@@ -413,13 +415,6 @@
 		z-index: $TOOLTIP_INDEX;
 	}
 	.softmax {
-		.top-k-line {
-			width: 100%;
-			height: 1px;
-			background: theme('colors.purple.500');
-			top: 1.5rem;
-			position: absolute;
-		}
 		&.expanded {
 			.title,
 			.content {
@@ -539,9 +534,6 @@
 			.strike {
 				text-decoration: line-through;
 			}
-			.current {
-				transform: translateY(0);
-			}
 
 			.softmax-subtitle {
 				gap: 0.5rem;
@@ -583,17 +575,6 @@
 
 		.second-column {
 			position: relative;
-
-			.dim {
-				user-select: none;
-				position: absolute;
-				bottom: 0;
-				width: 100%;
-				height: 50vh;
-				z-index: $EXPANDED_DIM_INDEX;
-				background-color: white;
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 70%);
-			}
 		}
 	}
 </style>

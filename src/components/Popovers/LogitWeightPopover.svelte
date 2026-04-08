@@ -51,20 +51,20 @@
 		);
 
 	// color scale
-	const embeddingColorScale = (d, i) => {
+	const embeddingColorScale = (d: number) => {
 		return d3.interpolate(theme.colors['blue'][100], theme.colors['blue'][400])(d);
 	};
-	const weightColorScale = (d, i) => {
+	const weightColorScale = (d: number) => {
 		return d3.interpolate(theme.colors['gray'][100], theme.colors['gray'][400])(d);
 	};
-	const logitColorScale = (d, i) => {
+	const logitColorScale = (d: number) => {
 		return d3.interpolate(theme.colors['blue'][100], theme.colors['gray'][400])(d);
 	};
 
 	// animation
 	let isAnimationActive = false;
 	let progress = 0;
-	let timeline;
+	let timeline: gsap.core.Timeline;
 
 	onMount(() => {
 		timeline = gsap.timeline();
@@ -83,7 +83,6 @@
 	onDestroy(() => {
 		if (timeline) {
 			timeline.kill();
-			timeline = null;
 		}
 	});
 
@@ -305,8 +304,9 @@
 	// event
 	let highlightCol: number | undefined = undefined;
 	let highlightRow: number | undefined = undefined;
+	type MatrixCellData = { rowIndex: number; colIndex: number };
 
-	const onMouseOverCell = (e, d) => {
+	const onMouseOverCell = (e: Event, d: MatrixCellData) => {
 		if (isAnimationActive) return;
 		highlightRow = d.rowIndex;
 		highlightCol = d.colIndex;

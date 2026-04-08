@@ -1,14 +1,18 @@
-"""
-Step 4: 用中文 ONNX 模型生成 ex0~ex4.js 示例数据
-输出格式与原 src/constants/examples/ex*.js 完全一致。
-"""
+"""Step 4: 用共享配置生成 ex0~ex4 中文示例数据。"""
 
 import sys, os, json
 import numpy as np
 
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR  = os.path.join(BASE_DIR, "models", "gpt2-chinese-cluecorpussmall")
-ONNX_PATH  = os.path.join(BASE_DIR, "models", "gpt2-chinese-onnx", "model.onnx")
+with open(os.path.join(BASE_DIR, "model-config.json"), encoding="utf-8") as f:
+    MODEL_CONFIG = json.load(f)
+
+MODEL_DIR  = os.path.join(BASE_DIR, MODEL_CONFIG["paths"]["localModelDir"])
+ONNX_PATH  = os.path.join(
+    BASE_DIR,
+    MODEL_CONFIG["paths"]["onnxOutputDir"],
+    MODEL_CONFIG["paths"]["onnxFileName"]
+)
 EXAMPLES_DIR = os.path.join(BASE_DIR, "src", "constants", "examples")
 
 sys.path.insert(0, os.path.join(BASE_DIR, "src", "utils", "model"))
@@ -18,9 +22,11 @@ from transformers import BertTokenizer
 
 tokenizer = BertTokenizer.from_pretrained(MODEL_DIR)
 sess = ort.InferenceSession(ONNX_PATH, providers=["CPUExecutionProvider"])
+np.random.seed(MODEL_CONFIG["runtime"]["sampleSeed"])
 
 # 获取所有 attention 输出名（与英文模型结构完全一致）
-N_LAYER, N_HEAD = 12, 12
+N_LAYER = MODEL_CONFIG["runtime"]["layerCount"]
+N_HEAD = MODEL_CONFIG["runtime"]["headCount"]
 attention_keys = [
     f"block_{i}_attn_head_{j}_{suffix}"
     for i in range(N_LAYER)
@@ -29,14 +35,7 @@ attention_keys = [
 ]
 output_keys = attention_keys + ["linear_output"]
 
-# 5 条中文示例，对应原来的 5 条英文
-PROMPTS = [
-    "数据可视化帮助用户",
-    "人工智能正在改变",
-    "当宇宙飞船接近",
-    "在荒芜的星球上他们发现了",
-    "深度学习技术的",
-]
+PROMPTS = MODEL_CONFIG["examples"]
 
 def run_inference(prompt: str):
     ids = tokenizer.encode(prompt, add_special_tokens=False)
@@ -56,9 +55,9 @@ def run_inference(prompt: str):
     tokens = [tokenizer.convert_ids_to_tokens([id_])[0] for id_ in ids]
 
     # 计算 probabilities 和 sampled（对齐前端 topKSampling 逻辑）
-    temperature = 0.8
-    k = 5
-    max_display = 50
+    temperature = MODEL_CONFIG["runtime"]["temperature"]
+    k = MODEL_CONFIG["runtime"]["topK"]
+    max_display = MODEL_CONFIG["runtime"]["maxDisplayTokens"]
 
     sorted_logits = sorted(enumerate(logits), key=lambda x: -x[1])[:max_display]
 

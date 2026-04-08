@@ -23,24 +23,24 @@
 		event: Event,
 		data: any,
 		el?: SVGRectElement | d3.BaseType
-	) => void | undefined;
+	) => void | undefined = undefined;
 	export let onMouseOutCell: (
 		event: Event,
 		data: any,
 		el?: SVGRectElement | d3.BaseType
-	) => void | undefined;
+	) => void | undefined = undefined;
 	export let onMouseOutSvg: (
 		event: Event,
 		data: any,
 		el?: SVGRectElement | d3.BaseType
-	) => void | undefined;
+	) => void | undefined = undefined;
 	export let showTooltip: (
 		event: Event,
 		data: any,
 		el: SVGRectElement | d3.BaseType
-	) => string | undefined;
-	export let highlightRow: number | undefined;
-	export let highlightCol: number | undefined;
+	) => string | undefined = undefined;
+	export let highlightRow: number | undefined = undefined;
+	export let highlightCol: number | undefined = undefined;
 
 	let svgEl: HTMLOrSVGElement;
 
@@ -245,7 +245,7 @@
 	let tooltipX = 0;
 	let tooltipY = 0;
 
-	function onCellOver(e, d) {
+	function onCellOver(e: Event, d: any) {
 		const el = this;
 		onMouseOverCell?.(e, d, el);
 
@@ -253,13 +253,13 @@
 		if (tooltipData) visibleTooltip(e, tooltipData);
 	}
 
-	function onCellOut(e, d) {
+	function onCellOut(e: Event, d: any) {
 		const el = this;
 		onMouseOutCell?.(e, d, el);
 		hideTooltip();
 	}
 
-	function onSvgOut(e, d) {
+	function onSvgOut(e: Event, d: any) {
 		onMouseOutSvg?.(e, d);
 		hideTooltip();
 	}

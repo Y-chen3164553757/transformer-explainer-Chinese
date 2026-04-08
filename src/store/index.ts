@@ -4,6 +4,7 @@ import tailwindConfig from '../../tailwind.config';
 import resolveConfig from 'tailwindcss/resolveConfig';
 import { ex0 } from '~/constants/examples';
 import { textPages } from '~/utils/textbookPages';
+import modelConfig from '../../model-config.json';
 
 const { theme } = resolveConfig(tailwindConfig);
 
@@ -27,13 +28,7 @@ export const isModelRunning = writable(false);
 export const isFetchingModel = writable(true);
 export const isLoaded = writable(false);
 
-export const inputTextExample = [
-	'数据可视化帮助用户',
-	'人工智能正在改变',
-	'当宇宙飞船接近',
-	'在荒芜的星球上他们发现了',
-	'深度学习技术的'
-];
+export const inputTextExample = modelConfig.examples;
 
 const initialExIdx = 0;
 export const selectedExampleIdx = writable<number>(initialExIdx);
@@ -47,10 +42,51 @@ export const tokens = writable<string[]>(ex0?.tokens);
 export const tokenIds = writable<number[]>(ex0?.tokenIds);
 
 export const modelMetaMap: Record<string, ModelMetaData> = {
-	gpt2: { layer_num: 12, attention_head_num: 12, dimension: 768, chunkTotal: 46 },
+	gpt2: {
+		layer_num: modelConfig.runtime.layerCount,
+		attention_head_num: modelConfig.runtime.headCount,
+		dimension: modelConfig.runtime.embeddingDim,
+		vocabSize: modelConfig.runtime.vocabSize,
+		tokenizerId: modelConfig.tokenizerId,
+		modelDir: modelConfig.paths.publicModelDir,
+		chunkFilePrefix: modelConfig.paths.chunkFilePrefix,
+		chunkTotal: modelConfig.runtime.chunkTotal,
+		cacheVersion: modelConfig.runtime.cacheVersion
+	},
 	'gpt2-medium': { layer_num: 24, attention_head_num: 16, dimension: 1024 },
 	'gpt2-large': { layer_num: 36, attention_head_num: 20, dimension: 1280 }
 };
+
+export const defaultModelId = 'gpt2';
+
+export function getRuntimeModelMeta(modelId = defaultModelId) {
+	const modelMeta = modelMetaMap[modelId];
+	if (
+		!modelMeta ||
+		!modelMeta.tokenizerId ||
+		!modelMeta.modelDir ||
+		!modelMeta.chunkFilePrefix ||
+		!modelMeta.chunkTotal ||
+		!modelMeta.cacheVersion
+	) {
+		throw new Error(`Model runtime config is incomplete for ${modelId}`);
+	}
+
+	return modelMeta as ModelMetaData & {
+		tokenizerId: string;
+		modelDir: string;
+		chunkFilePrefix: string;
+		chunkTotal: number;
+		cacheVersion: string;
+	};
+}
+
+export function getModelChunkUrls(basePath: string, modelId = defaultModelId) {
+	const modelMeta = getRuntimeModelMeta(modelId);
+	return Array.from({ length: modelMeta.chunkTotal }, (_, index) => {
+		return `${basePath}/${modelMeta.modelDir}/${modelMeta.chunkFilePrefix}${index}`;
+	});
+}
 
 // selected token vector
 export const highlightedToken = writable<HighlightedToken>({
@@ -74,7 +110,7 @@ export const inputText = writable(inputTextExample[initialExIdx]);
 // export const tokens = derived(inputText, ($inputText) => $inputText.trim().split(' '));
 
 // selected model and meta data
-const initialSelectedModel = 'gpt2';
+const initialSelectedModel = defaultModelId;
 export const selectedModel = writable(initialSelectedModel);
 export const modelMeta = derived(selectedModel, ($selectedModel) => modelMetaMap[$selectedModel]);
 

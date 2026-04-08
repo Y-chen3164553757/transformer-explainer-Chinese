@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import QkvWeightPopover from './popovers/QKVWeightPopover.svelte';
+	import QkvWeightPopover from './Popovers/QKVWeightPopover.svelte';
 	import { weightPopover, tooltip } from '~/store';
 	import { fade } from 'svelte/transition';
-	import AttentionWeightPopover from './popovers/AttentionWeightPopover.svelte';
-	import MLPWeightPopover from './popovers/MLPWeightPopover.svelte';
-	import MLPDownWeightPopover from './popovers/MLPDownWeightPopover.svelte';
+	import AttentionWeightPopover from './Popovers/AttentionWeightPopover.svelte';
+	import MLPWeightPopover from './Popovers/MLPWeightPopover.svelte';
+	import MLPDownWeightPopover from './Popovers/MLPDownWeightPopover.svelte';
 
-	import LogitWeightPopover from './popovers/LogitWeightPopover.svelte';
+	import LogitWeightPopover from './Popovers/LogitWeightPopover.svelte';
 	import { ArrowUpRightDownLeftOutline } from 'flowbite-svelte-icons';
 	import {
 		highlightAttentionPath,
@@ -24,19 +24,30 @@
 	let attentionPos = { left: 0, top: 0 };
 	let softmaxPos = { left: 0, top: 0 };
 
-	let popoverEl: HTMLElement = null;
+	let popoverEl: HTMLElement | null = null;
 
-	function handleOutsideClick(e) {
-		if (!!$weightPopover && !popoverEl.contains(e.target)) {
+	const mainSectionSelector = '.main-section';
+
+	function getAnchorPosition(rect: DOMRect | undefined, left: number, top: number) {
+		return {
+			left: rect ? left : 0,
+			top: rect ? top : 0
+		};
+	}
+
+	function handleOutsideClick(e: Event) {
+		if (!!$weightPopover && popoverEl && !popoverEl.contains(e.target as Node)) {
 			weightPopover.set(null);
 		}
 	}
+
 	// add global event
 	onMount(() => {
-		document.querySelector('.main-section').addEventListener('click', handleOutsideClick);
+		const mainSection = document.querySelector(mainSectionSelector);
+		mainSection?.addEventListener('click', handleOutsideClick);
 
 		return () => {
-			document.querySelector('.main-section').removeEventListener('click', handleOutsideClick);
+			mainSection?.removeEventListener('click', handleOutsideClick);
 		};
 	});
 
@@ -44,7 +55,8 @@
 	onMount(() => {
 		const setPosition = () => {
 			const scrollLeft = window.scrollX;
-			const topbarHeight = document.querySelector('.top-bar')?.offsetHeight;
+			const topbarHeight =
+				(document.querySelector('.top-bar') as HTMLElement | null)?.offsetHeight ?? 0;
 
 			const embedding = document.querySelector('.step.qkv .content');
 			const mlp = document.querySelector('.step.mlp .content');
@@ -58,17 +70,31 @@
 			const attentionRect = attention?.getBoundingClientRect();
 			const softmaxRect = softmax?.getBoundingClientRect();
 
-			qkvPos = { left: embeddingRect?.right + scrollLeft, top: embeddingRect?.top - topbarHeight };
-			mlpPos = { left: mlpRect?.left + scrollLeft, top: mlpRect?.top - topbarHeight };
-			mlpDownPos = { left: mlpDownRect?.left + scrollLeft, top: mlpDownRect?.top - topbarHeight };
-			attentionPos = {
-				left: attentionRect?.right + scrollLeft,
-				top: attentionRect?.top + attentionRect?.height / 2 - topbarHeight
-			};
-			softmaxPos = {
-				left: softmaxRect?.left + scrollLeft,
-				top: softmaxRect?.top - topbarHeight
-			};
+			qkvPos = getAnchorPosition(
+				embeddingRect,
+				(embeddingRect?.right ?? 0) + scrollLeft,
+				(embeddingRect?.top ?? 0) - topbarHeight
+			);
+			mlpPos = getAnchorPosition(
+				mlpRect,
+				(mlpRect?.left ?? 0) + scrollLeft,
+				(mlpRect?.top ?? 0) - topbarHeight
+			);
+			mlpDownPos = getAnchorPosition(
+				mlpDownRect,
+				(mlpDownRect?.left ?? 0) + scrollLeft,
+				(mlpDownRect?.top ?? 0) - topbarHeight
+			);
+			attentionPos = getAnchorPosition(
+				attentionRect,
+				(attentionRect?.right ?? 0) + scrollLeft,
+				(attentionRect?.top ?? 0) + (attentionRect?.height ?? 0) / 2 - topbarHeight
+			);
+			softmaxPos = getAnchorPosition(
+				softmaxRect,
+				(softmaxRect?.left ?? 0) + scrollLeft,
+				(softmaxRect?.top ?? 0) - topbarHeight
+			);
 		};
 
 		setPosition();
@@ -80,7 +106,7 @@
 		elements.forEach((el) => resizeObserver.observe(el));
 
 		return () => {
-			document.querySelector('.main-section').removeEventListener('click', handleOutsideClick);
+			resizeObserver?.disconnect();
 		};
 	});
 
@@ -90,7 +116,7 @@
 	let x = 0;
 	let y = 0;
 
-	function handleMouseMove(e) {
+	function handleMouseMove(e: MouseEvent) {
 		x = e.clientX + 10;
 		y = e.clientY + 10;
 	}

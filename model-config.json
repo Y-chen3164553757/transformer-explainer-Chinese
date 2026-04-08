@@ -1,0 +1,37 @@
+{
+  "modelId": "uer/gpt2-chinese-cluecorpussmall",
+  "tokenizerId": "bert-base-chinese",
+  "hfMirror": "https://hf-mirror.com",
+  "proxy": {
+    "http": "http://127.0.0.1:10808",
+    "https": "http://127.0.0.1:10808"
+  },
+  "paths": {
+    "localModelDir": "models/gpt2-chinese-cluecorpussmall",
+    "onnxOutputDir": "models/gpt2-chinese-onnx",
+    "onnxFileName": "model.onnx",
+    "staticModelDir": "static/model-v2-chinese",
+    "publicModelDir": "model-v2-chinese",
+    "chunkFilePrefix": "gpt2.onnx.part"
+  },
+  "runtime": {
+    "layerCount": 12,
+    "headCount": 12,
+    "embeddingDim": 768,
+    "vocabSize": 21128,
+    "chunkTotal": 46,
+    "chunkSizeBytes": 10485760,
+    "cacheVersion": "v3",
+    "temperature": 0.8,
+    "topK": 5,
+    "maxDisplayTokens": 50,
+    "sampleSeed": 42
+  },
+  "examples": [
+    "数据可视化帮助用户",
+    "人工智能正在改变",
+    "当宇宙飞船接近",
+    "在荒芜的星球上他们发现了",
+    "深度学习技术的"
+  ]
+}

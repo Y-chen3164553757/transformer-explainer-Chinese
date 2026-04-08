@@ -1,21 +1,24 @@
-"""
-下载 uer/gpt2-chinese-cluecorpussmall (L=12, H=768)
-模型地址: https://huggingface.co/uer/gpt2-chinese-cluecorpussmall
-镜像地址: https://hf-mirror.com/uer/gpt2-chinese-cluecorpussmall
-"""
-
 import os
+import json
 from huggingface_hub import snapshot_download
 
-# ✅ 使用本地代理 (端口 10808)
-os.environ["HTTP_PROXY"]  = "http://127.0.0.1:10808"
-os.environ["HTTPS_PROXY"] = "http://127.0.0.1:10808"
+"""下载共享配置中指定的中文 GPT-2 模型。"""
 
-MODEL_ID = "uer/gpt2-chinese-cluecorpussmall"
-LOCAL_DIR = os.path.join(os.path.dirname(__file__), "models", "gpt2-chinese-cluecorpussmall")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(BASE_DIR, "model-config.json"), encoding="utf-8") as f:
+    MODEL_CONFIG = json.load(f)
+
+proxy_cfg = MODEL_CONFIG.get("proxy", {})
+if proxy_cfg.get("http"):
+    os.environ["HTTP_PROXY"] = proxy_cfg["http"]
+if proxy_cfg.get("https"):
+    os.environ["HTTPS_PROXY"] = proxy_cfg["https"]
+
+MODEL_ID = MODEL_CONFIG["modelId"]
+LOCAL_DIR = os.path.join(BASE_DIR, MODEL_CONFIG["paths"]["localModelDir"])
 
 print(f"正在下载模型: {MODEL_ID}")
-print(f"镜像源: https://hf-mirror.com")
+print(f"镜像源: {MODEL_CONFIG['hfMirror']}")
 print(f"保存路径: {LOCAL_DIR}\n")
 
 snapshot_download(
