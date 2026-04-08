@@ -1,20 +1,36 @@
-本软件及其全部源代码、文档、数据归作者本人所有，已在中国申请软件著作权登记。
+MIT License
 
-未经作者书面许可，任何个人或组织不得以任何形式复制、分发、传播、商用本软件及其衍生作品。
+Copyright (c) 2026 Y-chen3164553757
 
-如需合作或授权，请联系作者本人。
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-版权所有 © 2026 你的姓名 保留所有权利
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-本项目部分代码和模型基于以下开源项目，均遵循 MIT License：
-- 原项目：poloclub/transformer-explainer
-- 中文模型：uer/gpt2-chinese-cluecorpussmall
-上述部分的原始版权及 MIT 协议声明已在相关文件中保留。
-本地化、重构与新增部分版权归 Y-chen3164553757 所有。
-本软件及其全部源代码、文档、数据归作者本人所有，已在中国申请软件著作权登记。
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
-未经作者书面许可，任何个人或组织不得以任何形式复制、分发、传播、商用本软件及其衍生作品。
+-------------------------------------------------------------------------------
 
-如需合作或授权，请联系作者本人。
+This project is based on the following open-source projects:
 
-版权所有 © 2026 你的姓名 保留所有权利
+1. poloclub/transformer-explainer (https://github.com/poloclub/transformer-explainer)
+   Copyright (c) poloclub
+   Licensed under the MIT License
+
+2. uer/gpt2-chinese-cluecorpussmall (https://huggingface.co/uer/gpt2-chinese-cluecorpussmall)
+   Copyright (c) UER Team
+   Licensed under the MIT License
+
+The original copyright notices and MIT license terms for the above projects
+are preserved in their respective source files.
