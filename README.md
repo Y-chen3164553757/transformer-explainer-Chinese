@@ -2,7 +2,9 @@
 
 > 基于原项目 [poloclub/transformer-explainer](https://github.com/poloclub/transformer-explainer) 二次开发，将模型替换为中文 GPT-2，并完整适配中文分词、中文示例数据与前端界面。
 
-[![license](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE)
+[![license: Proprietary](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE)
+[![upstream: MIT](https://img.shields.io/badge/upstream-MIT-blue.svg)](https://github.com/poloclub/transformer-explainer/blob/main/LICENSE)
+[![model: Apache 2.0](https://img.shields.io/badge/model-Apache%202.0-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 ![效果预览：中文版 Transformer 推理可视化](img/1.png)
 
@@ -213,20 +215,20 @@ transformer-explainer/
 本项目基于以下两个开源项目构建，向原作者致谢：
 
 **[poloclub/transformer-explainer](https://github.com/poloclub/transformer-explainer)**
-由 Georgia Institute of Technology 的 Aeree Cho、Grace C. Kim、Alexander Karpekov、Alec Helbling、Jay Wang、Seongmin Lee、Benjamin Hoover 和 Polo Chau 创作。本项目的前端可视化框架、ONNX 推理管线和交互设计均来源于此。发表于 IEEE VIS 2024。
+由 Georgia Institute of Technology 的 Aeree Cho、Grace C. Kim、Alexander Karpekov、Alec Helbling、Jay Wang、Seongmin Lee、Benjamin Hoover 和 Polo Chau 创作。本项目的前端可视化框架、ONNX 推理管线和交互设计均来源于此。发表于 IEEE VIS 2024。授权协议：MIT License。
 
 **[uer/gpt2-chinese-cluecorpussmall](https://huggingface.co/uer/gpt2-chinese-cluecorpussmall)**
-由 Universal Language Model Fine-tuning（UER）团队开源的中文 GPT-2 模型，在 CLUECorpusSmall 数据集上训练，词表大小 21128，12 层 12 头 768 维。本项目使用其权重作为中文推理引擎。该模型权重授权协议为 **Apache License 2.0**。
+由 Universal Language Model Fine-tuning（UER）团队开源的中文 GPT-2 模型，在 CLUECorpusSmall 数据集上训练，词表大小 21128，12 层 12 头 768 维。本项目使用其权重作为中文推理引擎。授权协议：Apache License 2.0。
 
 ---
 
-## 协议
+## License
 
-| 组件 | 授权协议 |
+| Component | License |
 |---|---|
-| 本项目自身代码（可视化、构建脚本等） | 私有协议，详见 [LICENSE](LICENSE) |
-| [poloclub/transformer-explainer](https://github.com/poloclub/transformer-explainer)（前端可视化框架来源） | MIT License |
-| [uer/gpt2-chinese-cluecorpussmall](https://huggingface.co/uer/gpt2-chinese-cluecorpussmall)（中文模型权重） | Apache License 2.0 |
+| This project (source code, scripts, docs) | Proprietary — see [LICENSE](LICENSE) |
+| [poloclub/transformer-explainer](https://github.com/poloclub/transformer-explainer) | [MIT License](https://github.com/poloclub/transformer-explainer/blob/main/LICENSE) |
+| [uer/gpt2-chinese-cluecorpussmall](https://huggingface.co/uer/gpt2-chinese-cluecorpussmall) (model weights) | [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 
-中文模型权重受 Apache 2.0 约束，包括对权重的再分发或衍生品。
+The original adaptations, engineering modifications, and new features created by the author are independent original works. Redistribution of the Chinese GPT-2 model weights must comply with the Apache License 2.0.
 

@@ -1,30 +1,72 @@
-Proprietary License
+Transformer Explainer Chinese Edition
+Proprietary Software License
 
-Copyright (c) 2026 Y-chen3164553757. All rights reserved.
+Software Name : Transformer Explainer Chinese Edition
+Author        : Y-chen3164553757
+Copyright Year: 2026
 
-This software and its source code, documentation, and data are the exclusive
-property of the copyright holder. Unauthorized copying, distribution,
-modification, or commercial use of this software, in whole or in part, is
-strictly prohibited without prior written permission from the copyright holder.
+Copyright (c) 2026 Y-chen3164553757. All Rights Reserved.
 
-For licensing inquiries or collaboration, please contact the author directly.
+─────────────────────────────────────────────────────────────
 
--------------------------------------------------------------------------------
+1. Ownership
 
-This project is based on the following open-source projects:
+This software, including but not limited to its source code, build
+scripts, documentation, example data files, and all related materials
+(collectively, the "Software"), is the exclusive intellectual property
+of the copyright holder. All rights not expressly granted herein are
+reserved.
 
-1. poloclub/transformer-explainer (https://github.com/poloclub/transformer-explainer)
-   Copyright (c) poloclub
-   Licensed under the MIT License
-   https://github.com/poloclub/transformer-explainer/blob/main/LICENSE
+2. Restrictions
 
-2. uer/gpt2-chinese-cluecorpussmall (https://huggingface.co/uer/gpt2-chinese-cluecorpussmall)
-   Copyright (c) UER Team
-   Licensed under the Apache License, Version 2.0
-   https://www.apache.org/licenses/LICENSE-2.0
+Without prior written permission from the copyright holder, you may
+not:
 
-The original copyright notices and license terms for the above projects
-are preserved in their respective source files.
+  a) copy, reproduce, or distribute the Software or any portion thereof;
+  b) modify, adapt, translate, or create derivative works based on the
+     Software;
+  c) use the Software for any commercial purpose;
+  d) reverse engineer, decompile, or disassemble the Software, except
+     to the extent required by applicable law;
+  e) sublicense or transfer any rights in the Software to any third
+     party.
 
-NOTE: Use of the Chinese GPT-2 model weights is subject to the Apache License 2.0.
-This includes any redistribution of the model weights or derivative works thereof.
+3. Licensing Inquiries
+
+For permission requests, commercial licensing, or collaboration,
+please contact the copyright holder directly.
+
+4. Disclaimer of Warranties
+
+The Software is provided "AS IS", without warranty of any kind,
+express or implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose, or non-infringement.
+The copyright holder shall not be liable for any claim, damages, or
+other liability arising from the use of the Software.
+
+─────────────────────────────────────────────────────────────
+
+Third-Party Open Source Components
+
+This Software incorporates portions of the following open source
+projects. Each such component remains governed by its original license.
+
+1. poloclub/transformer-explainer
+   URL     : https://github.com/poloclub/transformer-explainer
+   Author  : poloclub, Georgia Institute of Technology
+   License : MIT License
+   Full text: https://github.com/poloclub/transformer-explainer/blob/main/LICENSE
+
+2. uer/gpt2-chinese-cluecorpussmall (model weights only)
+   URL     : https://huggingface.co/uer/gpt2-chinese-cluecorpussmall
+   Author  : UER Team
+   License : Apache License, Version 2.0
+   Full text: https://www.apache.org/licenses/LICENSE-2.0
+
+Note: Redistribution of the Chinese GPT-2 model weights must comply
+with the Apache License 2.0.
+
+The original adaptations, engineering modifications, build pipeline,
+and feature additions created by the copyright holder are original
+works independent of the above open source licenses.
+
