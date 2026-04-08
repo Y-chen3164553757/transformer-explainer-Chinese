@@ -300,7 +300,7 @@
 </script>
 
 <div class="multi-head flex w-full" data-click="attention-head">
-	<div class="head-title absolute bottom-2 right-3 text-right text-gray-400">
+	<div class="head-title absolute right-3 text-right text-gray-400">
 		<TextbookTooltip id="multi-head">
 			<span class="title-text"
 				>Head {$attentionHeadIdxTemp + 1} of {$modelMeta.attention_head_num}</span
@@ -333,6 +333,8 @@
 
 <style lang="scss">
 	.head-title {
+		/* 直接针对父级区块的顶部高度绝对固定！从而无视由于生成文字导致整体区域变长的影响，永远呆在此处 */
+		top: 20rem;
 		padding-bottom: 0.5rem;
 		padding-right: 0.5rem;
 

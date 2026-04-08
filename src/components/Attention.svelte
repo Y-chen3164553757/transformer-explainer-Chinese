@@ -178,17 +178,18 @@
 		}
 		.column {
 			.label {
-				font-size: 1rem;
-				line-height: 1.35;
+				font-size: 0.85rem;
+				line-height: 1.1;
 				color: theme('colors.gray.600');
+				white-space: nowrap;
 			}
 			.title {
 				z-index: $COLUMN_TITLE_INDEX;
 				position: absolute;
-				top: -2.1rem;
+				top: -1.7rem;
 				left: 50%;
 				transform: translateX(-50%);
-				font-size: 1rem;
+				font-size: 0.95rem;
 				font-weight: 600;
 				letter-spacing: 0.03em;
 				transition: none;
@@ -224,25 +225,25 @@
 			}
 
 			.attention-qkv {
-				gap: 6.5rem;
+				gap: var(--qkv-gap, 6.5rem);
 				flex-shrink: 0;
 				/* 顶部对齐，避免在矩阵较高时垂直居中导致上方大块留白、底部 Value 被裁切 */
 				justify-content: flex-start;
 
 				.column {
-					gap: 0.88rem;
+					gap: var(--token-gap, 0.88rem);
 				}
 
 				.head1.cell {
 					box-sizing: border-box;
-					padding-top: 0.12rem;
-					padding-bottom: 0.12rem;
+					padding-top: 0.1rem;
+					padding-bottom: 0.1rem;
 					align-items: center;
 
 					.label.float {
-						font-size: 1.1rem;
-						line-height: 1.5;
-						letter-spacing: 0.02em;
+						font-size: 0.95rem;
+						line-height: 1.35;
+						letter-spacing: 0;
 					}
 				}
 			}
@@ -263,18 +264,18 @@
 						.label {
 							background-color: theme('colors.blue.100');
 							color: theme('colors.blue.700');
-							font-size: 1rem;
+							font-size: 0.95rem;
 							z-index: 100;
-							padding: 0.2rem;
+							padding: 0.15rem;
 						}
 					}
 					&.key {
 						.label {
 							background-color: theme('colors.red.100');
 							color: theme('colors.red.700');
-							font-size: 1rem;
+							font-size: 0.95rem;
 							z-index: 100;
-							padding: 0.2rem;
+							padding: 0.15rem;
 						}
 					}
 				}
