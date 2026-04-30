@@ -277,7 +277,7 @@
 					{/each}
 				</div>
 
-				<TextbookNavigation {textPages} {isMouseInCard} {isLeftSide} />
+				<TextbookNavigation {textPages} {isMouseInCard} />
 			</div>
 		</div>
 	</div>

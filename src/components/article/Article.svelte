@@ -216,16 +216,16 @@
 			</p>
 		</div>
 		<div class="article-subsection-l2">
-			<h4>步骤 3：掩蔽自注意（Masked Self-Attention）</h4>
+			<h4>步骤 3：掩码自注意力（Masked Self-Attention）</h4>
 			<p>
-				在每个头中，我们执行掩蔽自注意计算。该机制使模型在生成序列时，能集中关注输入的相关部分，同时阻止其访问未来的词元。
+				在每个头中，我们执行掩码自注意力计算。该机制使模型在生成序列时，能集中关注输入的相关部分，同时阻止其访问未来的词元。
 			</p>
 
 			<div class="figure">
 				<img src="./article_assets/attention.png" width="80%" align="middle" />
 			</div>
 			<div class="figure-caption">
-				图 <span class="attention">3</span>. 使用 Query、Key 和 Value 矩阵计算掩蔽自注意力。
+				图 <span class="attention">3</span>. 使用 Query、Key 和 Value 矩阵计算掩码自注意力。
 			</div>
 
 			<ul>
@@ -244,7 +244,7 @@
 		<div class="article-subsection-l2">
 			<h4>步骤 4：输出与拼接</h4>
 			<p>
-				模型将掩蔽自注意分数与 <span class="v-color">Value</span> 矩阵相乘，得到自注意机制的 <span class="purple-color">最终输出</span>。GPT-2 有 <code>12</code> 个自注意头，每个头捕捉不同的词元间关系。各头的输出将被拼接，再经线性投影处理。
+				模型将掩码自注意力分数与 <span class="v-color">Value</span> 矩阵相乘，得到自注意机制的 <span class="purple-color">最终输出</span>。GPT-2 有 <code>12</code> 个自注意头，每个头捕捉不同的词元间关系。各头的输出将被拼接，再经线性投影处理。
 			</p>
 		</div>
 	</div>

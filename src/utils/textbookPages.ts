@@ -307,7 +307,7 @@ export const textPages: TextbookPage[] = [
 	},
 	{
 		id: 'masked-self-attention',
-		title: '掩蔽自注意力（Masked Self-Attention）',
+		title: '掩码自注意力（Masked Self-Attention）',
 		content: `<p>在每个头中，模型都会决定每个词元应该关注其他词元到什么程度：</p><ul><li><strong>点积（Dot Product）</strong>：将 <span class="blue">Query</span>/<span class="red">Key</span> 向量中对应位置的数相乘并求和，得到 <span class="purple">注意力分数</span>。</li><li><strong>掩码（Mask）</strong>：遮住未来词元，防止模型提前偷看后面的内容。</li><li><strong>Softmax（归一化函数）</strong>：把分数转换成概率，每一行加起来都等于 1，表示它对前面各词元的关注程度。</li></ul>`,
 		on: () => {
 			highlightAttentionPath();

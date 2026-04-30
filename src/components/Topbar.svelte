@@ -14,7 +14,7 @@
 
 <div class="top-bar flex w-full items-center gap-4 px-10 py-2 pb-3" class:active={isActive}>
 	<div class="logo text-bold text-gray-700" data-click="logo">
-		Transformer<span class="small"> 详解</span>
+		TRANSFORMER EXPLAINER
 	</div>
 	<div class="inputs flex grow items-center">
 		<div class="input-wrapper w-full" class:active={isActive}>
@@ -42,8 +42,12 @@
 				/>
 			</svg>
 		</a>
-		<!-- video -->
-		<a href="https://www.youtube.com/watch?v=ECR4oAwocjs" target="_blank" data-click="ytb-btn">
+		<!-- original project demo site -->
+		<a
+			href="https://poloclub.github.io/transformer-explainer/"
+			target="_blank"
+			data-click="orig_demo_btn"
+		>
 			<svg
 				class="h-6 w-6 text-gray-800 dark:text-white"
 				aria-hidden="true"
@@ -53,16 +57,12 @@
 				fill="currentColor"
 				viewBox="0 0 24 24"
 			>
-				<path
-					fill-rule="evenodd"
-					d="M21.7 8.037a4.26 4.26 0 0 0-.789-1.964 2.84 2.84 0 0 0-1.984-.839c-2.767-.2-6.926-.2-6.926-.2s-4.157 0-6.928.2a2.836 2.836 0 0 0-1.983.839 4.225 4.225 0 0 0-.79 1.965 30.146 30.146 0 0 0-.2 3.206v1.5a30.12 30.12 0 0 0 .2 3.206c.094.712.364 1.39.784 1.972.604.536 1.38.837 2.187.848 1.583.151 6.731.2 6.731.2s4.161 0 6.928-.2a2.844 2.844 0 0 0 1.985-.84 4.27 4.27 0 0 0 .787-1.965 30.12 30.12 0 0 0 .2-3.206v-1.516a30.672 30.672 0 0 0-.202-3.206Zm-11.692 6.554v-5.62l5.4 2.819-5.4 2.801Z"
-					clip-rule="evenodd"
-				/>
+				<path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm6 8h-2.1a6.978 6.978 0 00-1.02-2.53A8.012 8.012 0 0118 10zM12 4c1.48 0 2.9.44 4.1 1.2A10.02 10.02 0 0012 9c-1.86 0-3.6.48-5.1 1.3A8.01 8.01 0 0112 4zm-6 6a8.01 8.01 0 012.9-3.3C9.4 9.48 10.86 10 12 10c1.14 0 2.6-.52 3.1-3.3A8.01 8.01 0 016 10zm6 10c-1.48 0-2.9-.44-4.1-1.2A10.02 10.02 0 0012 15c1.86 0 3.6-.48 5.1-1.3A8.01 8.01 0 0112 20zM18 14a8.01 8.01 0 01-2.9 3.3C14.6 14.52 13.14 14 12 14c-1.14 0-2.6.52-3.1 3.3A8.01 8.01 0 0118 14z"/>
 			</svg>
 		</a>
 		<!-- repo -->
 		<a
-			href="https://github.com/poloclub/transformer-explainer"
+			href="https://github.com/Y-chen3164553757/transformer-explainer-Chinese"
 			target="_blank"
 			data-click="github_btn"
 		>

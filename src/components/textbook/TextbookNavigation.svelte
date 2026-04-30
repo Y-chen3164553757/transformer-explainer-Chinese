@@ -11,7 +11,6 @@
 
 	export let textPages: TextbookPage[];
 	export let isMouseInCard: boolean = false;
-	export let isLeftSide: boolean = true;
 
 	let showPageDropdown = false;
 	let isDragging = false;

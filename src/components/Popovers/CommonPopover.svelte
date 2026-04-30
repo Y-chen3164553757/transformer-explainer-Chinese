@@ -41,7 +41,9 @@
 	{title}
 	{placement}
 	{reference}
-	offset={1}
+	offset={offset ?? 1}
+	trigger={trigger}
+	triggeredBy={triggeredBy}
 	arrow={false}
 	data-click={`popover-${className}`}
 	on:show={(e) => {
