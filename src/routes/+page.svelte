@@ -316,7 +316,7 @@
 			.hide {
 				display: none;
 			}
-			&.animate-forward {
+			&:global(.animate-forward) {
 				.block-steps,
 				.transition-watch {
 					animation-duration: 800ms;
@@ -336,7 +336,7 @@
 				}
 			}
 
-			&.animate-backward {
+			&:global(.animate-backward) {
 				.block-steps,
 				.transition-watch {
 					animation-duration: 800ms;
