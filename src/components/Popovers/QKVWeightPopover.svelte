@@ -320,8 +320,8 @@
 		</div>
 		<div class="matrix flex flex-col items-center">
 			<div class="title flex items-center gap-1 self-end">
-				Embeddings<HelpPopover id="qkv-emgeddings" 
-					>{`Embeddings originate from tokens \nbut evolve through blocks, becoming \nabstract representations.`}</HelpPopover
+				嵌入向量<HelpPopover id="qkv-emgeddings" 
+					>{`嵌入向量来源于词元，\n但在经过各 Transformer 块时不断演化，\n逐渐成为更抽象的表示。`}</HelpPopover
 				>
 			</div>
 			<!-- (tokenLen, 768) -->
@@ -341,7 +341,7 @@
 		<div class="matrix flex flex-col items-center">
 			<div class="title flex items-center gap-1">
 				Q·K·V Weights<HelpPopover id="qkv-weights" 
-					>{`Transforms embedding vectors into Query, Key, and Value vectors. \nParameters were learned in training, fixed in prediction.`}</HelpPopover
+					>{`将嵌入向量变换为 Query、Key 和 Value 向量。\n这些参数在训练中习得，预测时保持固定。`}</HelpPopover
 				>
 			</div>
 			<div class="flex gap-0">
@@ -364,7 +364,7 @@
 		<div class="matrix flex flex-col items-center">
 			<div class="title flex items-center gap-1">
 				Q·K·V Bias<HelpPopover id="qkv-bias" 
-					>{`Offsets added after transformation. \nParameters that learned in training, fixed in prediction.`}</HelpPopover
+					>{`变换后叠加的偏置量。\n这些参数在训练中习得，预测时保持固定。`}</HelpPopover
 				>
 			</div>
 			<Matrix

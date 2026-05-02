@@ -212,7 +212,7 @@
 		data-click="prob-step-title"
 	>
 		<div class="title-text flex w-max items-center gap-1">
-			Probabilities
+				概率分布
 			<ZoomInOutline></ZoomInOutline>
 		</div>
 	</div>
@@ -236,7 +236,7 @@
 					>
 						<span>{item.token.trim() === '' ? '\u00A0' : item.token}</span>
 						<Tooltip class="softmax-tooltip" type="light">
-							Token ID: <span class="number">{tokenIds[idx]}</span>
+								词元 ID：<span class="number">{tokenIds[idx]}</span>
 						</Tooltip>
 					</div>
 				{/each}
@@ -248,7 +248,7 @@
 			{#if isSoftmaxExpanded}
 				<div class="softmax-subtitle softmax-detail flex text-center text-xs opacity-0">
 					<div class="title-box token-string !justify-end">
-						<div class="title-text">Tokens</div>
+						<div class="title-text">词元</div>
 					</div>
 					<div class="title-box logits">
 						<button
@@ -262,7 +262,7 @@
 					</div>
 					<div class="title-box scaled">
 						<TextbookTooltip id="temperature"
-							><div class="title-text">Scaled logits</div></TextbookTooltip
+							><div class="title-text">缩放 Logits</div></TextbookTooltip
 						>
 					</div>
 					<div class="title-box sampling">
@@ -274,7 +274,7 @@
 					</div>
 					<div class="title-box probability">
 						<div class="title-text mr-1">
-							{$sampling.type === 'top-k' ? 'Softmax' : 'Normalization'}
+							{$sampling.type === 'top-k' ? 'Softmax' : '归一化'}
 						</div>
 					</div>
 				</div>

@@ -256,14 +256,14 @@
 </script>
 
 <WeightPopoverCard
-	id="attention"
-	title={`Attention Head ${$attentionHeadIdx + 1} Out`}
+	id={`attention`}
+	title={`注意力头 ${$attentionHeadIdx + 1} 输出`}
 	bind:isAnimationActive
 	{timeline}
 >
 	<div class="attention-weight-poover weight-popover-content flex items-center justify-start">
 		<div class="matrix flex flex-col items-center">
-			<div class="title">Attention</div>
+			<div class="title">注意力分数</div>
 			<Matrix
 				className="attention-matrix"
 				data={maskArray(softmaxed)}

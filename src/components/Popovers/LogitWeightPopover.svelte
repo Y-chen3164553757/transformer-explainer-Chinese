@@ -321,9 +321,9 @@
 	<div class="weight-popover-content flex items-center justify-start">
 		<div class="matrix flex flex-col items-center">
 			<div class="title flex items-center gap-1">
-				<span>Output<br />Embedding</span>
+				<span>输出<br />嵌入向量</span>
 				<HelpPopover id="hidden-states" 
-					>{`After passing through all blocks, \nthe final token's embedding vector \ncontains all the contextual information \nfrom the preceding tokens.`}</HelpPopover
+					>{`经过所有 Transformer 块处理后，\n最后一个词元的嵌入向量\n包含了来自前序所有词元的\n完整上下文信息。`}</HelpPopover
 				>
 			</div>
 			<Matrix
@@ -341,9 +341,9 @@
 		<div class="operator"><div class="symbol mul pl-3">&times;</div></div>
 		<div class="matrix flex flex-col items-center">
 			<div class="title flex items-center gap-1">
-				Output Projection Weights
+				输出投影权重
 				<HelpPopover id="lm-head-weights" 
-					>{`Transforms the final embedding into a vocabulary distribution.\nParameters were learned in training, fixed in prediction.`}</HelpPopover
+					>{`将最终嵌入向量转换为词汇表上的概率分布。\n这些参数在训练中习得，预测时保持固定。`}</HelpPopover
 				>
 			</div>
 			<div class="flex gap-0">
@@ -365,8 +365,8 @@
 		<div class="operator"><div class="symbol plus">+</div></div>
 		<div class="matrix flex flex-col items-center">
 			<div class="title flex items-center gap-1">
-				Output Projection Bias<HelpPopover id="lm-head-bias" 
-					>{`Offsets added after the transformation.\nParameters were learned in training, fixed in prediction.`}</HelpPopover
+				输出投影偏置<HelpPopover id="lm-head-bias" 
+					>{`变换后叠加的偏置量。\n这些参数在训练中习得，预测时保持固定。`}</HelpPopover
 				>
 			</div>
 			<Matrix
@@ -387,7 +387,7 @@
 			<div class="title flex items-center gap-1">
 				Logits
 				<HelpPopover id="logits" 
-					>{`Raw scores representing the model’s preference \nfor each vocabulary token before applying softmax.`}</HelpPopover
+				>{`模型在应用 softmax 之前\n对词汇表中每个词元的原始偏好分数（未归一化）。`}</HelpPopover
 				>
 			</div>
 			<div class="flex">

@@ -29,14 +29,14 @@
 		class="softmax-popover-title rounded-t-md border-b border-gray-200 bg-gray-100 px-3 py-2 dark:border-gray-600 dark:bg-gray-700"
 	>
 		<h3 class="font-semibold text-gray-900">
-			Probability of <span class="highlight">"{selected?.token}"</span> token being sampled
+			<span class="highlight">"{selected?.token}"</span> 词元被采样的概率
 		</h3>
 	</div>
 	<div class="softmax-popover-content">
 		<div class="formula-steps">
 			<div class="formula-step scaled">
 				<TextbookTooltip id="temperature">
-					<div class="step-title">Scaled logit</div></TextbookTooltip
+					<div class="step-title">缩放后的 Logit</div></TextbookTooltip
 				>
 				<div class="step-content">
 					<div class="fraction">
@@ -47,7 +47,7 @@
 						<div class="frac-line"></div>
 						<div class="frac-bottom relative">
 							<span class="number">{$temperature}</span>
-							<span class="annotation temp"> <Arrow size={16} /><span>temperature</span></span>
+							<span class="annotation temp"> <Arrow size={16} /><span>温度</span></span>
 						</div>
 					</div>
 				</div>
@@ -88,7 +88,7 @@
 			<div class="formula-step sampling">
 				<TextbookTooltip id="sampling">
 					<div class="step-title">
-						<span>{$sampling.type === 'top-k' ? 'Top-k' : 'Top-p'} Filtering</span>
+						<span>{$sampling.type === 'top-k' ? 'Top-k' : 'Top-p'} 筛选</span>
 						<span class="sub-title"
 							>({$sampling.type === 'top-k' ? 'k' : 'p'}={$sampling.value})</span
 						>
@@ -100,7 +100,7 @@
 							<div class="cases">
 								<div class="case-row">
 									<span class="condition text"
-										>If logit <Katex math={'\\in'} /> Top-{$sampling.value}
+										>若 logit <Katex math={'\\in'} /> 前 {$sampling.value} 个
 									</span>
 									<span class="number" class:highlight={selected?.rank < $sampling.value}
 										>{getStringNumber(selected?.scaledLogit)}</span
@@ -108,7 +108,7 @@
 								</div>
 								<div class="case-row">
 									<span class="condition text"
-										>Otherwise <span
+										>否则 <span
 											class="number infinity"
 											class:highlight={selected?.rank >= $sampling.value}
 											><Katex math={'-\\infty'} /></span
@@ -120,7 +120,7 @@
 							<div class="cases">
 								<div class="case-row">
 									<span class="condition text">
-										If cumulative prob ≤ {$sampling.value}
+										若累计概率 ≤ {$sampling.value}
 									</span>
 									<span class="number" class:highlight={selected?.rank <= selected?.cutoffIndex}
 										>{getStringNumber(selected?.topPProbability)}</span
@@ -128,7 +128,7 @@
 								</div>
 								<div class="case-row">
 									<span class="condition text"
-										>Otherwise <span
+										>否则 <span
 											class="number infinity"
 											class:highlight={selected?.rank > selected?.cutoffIndex}>0</span
 										></span
@@ -182,7 +182,7 @@
 				</div>
 			{:else}
 				<div class="formula-step norm-step">
-					<div class="step-title">Normalization</div>
+					<div class="step-title">归一化</div>
 					<div class="step-content">
 						{#if selected?.cutoffIndex >= selected?.rank}
 							<div class="fraction">

@@ -84,8 +84,8 @@
 								</div>
 							{/each}
 							<Tooltip class="popover" triggeredBy={'.step.attention .key .cell'} placement="right"
-								>Key, Head {$attentionHeadIdx + 1}, vector({$modelMeta.dimension /
-									$modelMeta.attention_head_num})</Tooltip
+							>Key，第 {$attentionHeadIdx + 1} 个注意力头，向量维度 {$modelMeta.dimension /
+								$modelMeta.attention_head_num}</Tooltip
 							>
 						</div>
 						<div class="column query">
@@ -104,8 +104,8 @@
 								class="popover"
 								triggeredBy={'.step.attention .query .cell'}
 								placement="right"
-								>Query, Head {$attentionHeadIdx + 1}, vector({$modelMeta.dimension /
-									$modelMeta.attention_head_num})</Tooltip
+							>Query，第 {$attentionHeadIdx + 1} 个注意力头，向量维度 {$modelMeta.dimension /
+								$modelMeta.attention_head_num}</Tooltip
 							>
 						</div>
 						<div class="column value">
@@ -120,8 +120,8 @@
 								class="popover"
 								triggeredBy={'.step.attention .value .cell'}
 								placement="right"
-								>Value, Head {$attentionHeadIdx + 1}, vector({$modelMeta.dimension /
-									$modelMeta.attention_head_num})</Tooltip
+							>Value，第 {$attentionHeadIdx + 1} 个注意力头，向量维度 {$modelMeta.dimension /
+								$modelMeta.attention_head_num}</Tooltip
 							>
 						</div>
 					</div>
@@ -131,7 +131,7 @@
 					<div class="head-out mx-[2rem] self-start">
 						<div class="column out">
 							<div class="head1 title">
-								<TextbookTooltip id="output-concatenation">Out</TextbookTooltip>
+								<TextbookTooltip id="output-concatenation">输出</TextbookTooltip>
 							</div>
 							{#each $tokens as token, index}
 								<div class="head1 cell x1-12" class:last={index === $tokens.length - 1}>
@@ -139,8 +139,8 @@
 								</div>
 							{/each}
 							<Tooltip class="popover" triggeredBy={'.step.attention .out .cell'} placement="right"
-								>Attention Out, Head 1, vector({$modelMeta.dimension /
-									$modelMeta.attention_head_num})</Tooltip
+								>注意力输出，第 1 个头，向量维度 {$modelMeta.dimension /
+									$modelMeta.attention_head_num}</Tooltip
 							>
 						</div>
 					</div>

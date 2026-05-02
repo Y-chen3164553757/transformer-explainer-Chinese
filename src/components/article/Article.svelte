@@ -80,7 +80,7 @@
 			假设你想用 Transformer 模型生成文字，输入了这样一段提示：<code>"数据可视化帮助用户"</code>。这段输入需要被转换为模型能够理解和处理的格式，这就是词嵌入（Embedding）的作用：它将文本转化为模型可处理的数值表示。将提示转换为嵌入需要经过以下四个步骤：1) 对输入进行分词（Tokenization），2) 获取词元嵌入（Token Embedding），3) 添加位置信息（Positional Encoding），最后 4) 将词元编码与位置编码相加，得到最终的嵌入表示。下面我们逐步了解每个步骤。
 		</p>
 		<div class="figure">
-			<img src="./article_assets/embedding.png" width="65%" />
+			<img src="./article_assets/embedding.png" width="70%" />
 		</div>
 		<div class="figure-caption">
 			图 <span class="attention">1</span>. 展开词嵌入层视图，展示输入提示如何被转换为向量表示。该过程包括
@@ -222,7 +222,7 @@
 			</p>
 
 			<div class="figure">
-				<img src="./article_assets/attention.png" width="80%" align="middle" />
+				<img src="./article_assets/attention.png" width="75%" align="middle" />
 			</div>
 			<div class="figure-caption">
 				图 <span class="attention">3</span>. 使用 Query、Key 和 Value 矩阵计算掩码自注意力。
@@ -283,7 +283,7 @@
 		</p>
 
 		<div class="figure py-5">
-			<img src="./article_assets/softmax.png" width="70%" />
+			<img src="./article_assets/softmax.png" width="85%" />
 		</div>
 		<div class="figure-caption">
 			图 <span class="attention">5</span>. 词汇表中的每个词元都会依据模型输出的 logits（未归一化分数）被赋予一个概率，这些概率决定了各个词元成为序列中下一个词的可能性。
