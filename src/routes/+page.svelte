@@ -22,7 +22,8 @@
 		userId,
 		selectedModel,
 		getRuntimeModelMeta,
-		getModelChunkUrls
+		getModelChunkUrls,
+		modelDownloadProgress
 	} from '~/store';
 	import { PreTrainedTokenizer } from '@xenova/transformers';
 	import Sankey from '~/components/Sankey.svelte';
@@ -81,7 +82,10 @@
 		// Fetch from cache
 		const { hasCache, mergedArray } = await fetchAndMergeChunks(
 			chunkUrls,
-			runtimeModelMeta.cacheVersion
+			runtimeModelMeta.cacheVersion,
+			(completed, total) => {
+				modelDownloadProgress.set(completed / total);
+			}
 		);
 
 		// Create a Blob from the merged array

@@ -20,7 +20,8 @@
 		blockIdx,
 		temperature,
 		tokenIds,
-		userId
+		userId,
+		modelDownloadProgress
 	} from '~/store';
 	import LoadingDots from './common/LoadingDots.svelte';
 	import classNames from 'classnames';
@@ -222,8 +223,8 @@
 				{/if}
 				{#if $isMobile}
 					<span class="helper-text">可先试用示例；完整输入请在桌面浏览器中使用。</span>
-				{:else if $isLoaded && $isFetchingModel}
-					<span class="helper-text">模型下载中，可先点击上方示例体验（体积较大，请稍候）。</span>
+				{:else if $isFetchingModel}
+					<span class="helper-text">模型下载中 ({Math.round($modelDownloadProgress * 100)}%)，体积较大，请稍候...</span>
 				{/if}
 			</div>
 		</ButtonGroup>

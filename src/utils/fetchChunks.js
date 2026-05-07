@@ -4,7 +4,7 @@ function getCacheName(cacheVersion = 'v2') {
 	return `${CACHE_PREFIX}-${cacheVersion}`;
 }
 
-async function fetchModelChunks(chunkUrls, cacheVersion = 'v2') {
+async function fetchModelChunks(chunkUrls, cacheVersion = 'v2', onProgress = null) {
 	const cacheName = getCacheName(cacheVersion);
 	await clearOldCaches(cacheName);
 
@@ -15,6 +15,13 @@ async function fetchModelChunks(chunkUrls, cacheVersion = 'v2') {
 	const modelBuffers = new Array(chunkUrls.length);
 	const maxConcurrency = 3; // Limit concurrent downloads
 	let currentIndex = 0;
+	let completedChunks = 0;
+
+	const reportProgress = () => {
+		if (onProgress) {
+			onProgress(completedChunks, chunkUrls.length);
+		}
+	};
 
 	async function fetchWorker() {
 		while (currentIndex < chunkUrls.length) {
@@ -28,6 +35,8 @@ async function fetchModelChunks(chunkUrls, cacheVersion = 'v2') {
 					if (response.ok) {
 						cache.put(url, response.clone());
 						modelBuffers[index] = await response.arrayBuffer();
+						completedChunks++;
+						reportProgress();
 					} else {
 						throw new Error(`Failed to fetch ${url}`);
 					}
@@ -39,6 +48,8 @@ async function fetchModelChunks(chunkUrls, cacheVersion = 'v2') {
 				hasCache = true;
 				// console.log(`Using cached version: ${url}`);
 				modelBuffers[index] = await cachedResponses[index].arrayBuffer();
+				completedChunks++;
+				reportProgress();
 			}
 		}
 	}
@@ -53,8 +64,8 @@ async function fetchModelChunks(chunkUrls, cacheVersion = 'v2') {
 	return { hasCache, modelBuffers };
 }
 
-export async function fetchAndMergeChunks(urls, cacheVersion = 'v2') {
-	const { hasCache, modelBuffers: chunks } = await fetchModelChunks(urls, cacheVersion);
+export async function fetchAndMergeChunks(urls, cacheVersion = 'v2', onProgress = null) {
+	const { hasCache, modelBuffers: chunks } = await fetchModelChunks(urls, cacheVersion, onProgress);
 	const totalSize = chunks.reduce((acc, chunk) => acc + chunk.byteLength, 0);
 	const mergedArray = new Uint8Array(totalSize);
 	let offset = 0;

@@ -26,6 +26,7 @@ export const isTextbookOpen = writable<boolean>(true);
 // is transformer running?
 export const isModelRunning = writable(false);
 export const isFetchingModel = writable(true);
+export const modelDownloadProgress = writable(0);
 export const isLoaded = writable(false);
 
 export const inputTextExample = modelConfig.examples;
