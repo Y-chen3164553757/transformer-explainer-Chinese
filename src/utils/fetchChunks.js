@@ -12,26 +12,44 @@ async function fetchModelChunks(chunkUrls, cacheVersion = 'v2') {
 	const cache = await caches.open(cacheName);
 	const cachedResponses = await Promise.all(chunkUrls.map((url) => cache.match(url)));
 
-	// add cache
-	const fetchPromises = chunkUrls.map((url, index) => {
-		if (!cachedResponses[index]) {
-			// console.log(`Fetching and caching: ${url}`);
-			return fetch(url).then((response) => {
-				if (response.ok) {
-					cache.put(url, response.clone());
-					return response.arrayBuffer();
-				} else {
-					throw new Error(`Failed to fetch ${url}`);
-				}
-			});
-		} else {
-			hasCache = true;
-			// console.log(`Using cached version: ${url}`);
-			return cachedResponses[index].arrayBuffer();
-		}
-	});
+	const modelBuffers = new Array(chunkUrls.length);
+	const maxConcurrency = 3; // Limit concurrent downloads
+	let currentIndex = 0;
 
-	const modelBuffers = await Promise.all(fetchPromises);
+	async function fetchWorker() {
+		while (currentIndex < chunkUrls.length) {
+			const index = currentIndex++;
+			const url = chunkUrls[index];
+
+			if (!cachedResponses[index]) {
+				// console.log(`Fetching and caching: ${url}`);
+				try {
+					const response = await fetch(url);
+					if (response.ok) {
+						cache.put(url, response.clone());
+						modelBuffers[index] = await response.arrayBuffer();
+					} else {
+						throw new Error(`Failed to fetch ${url}`);
+					}
+				} catch (error) {
+					console.error(`Error fetching chunk ${index}:`, error);
+					throw error;
+				}
+			} else {
+				hasCache = true;
+				// console.log(`Using cached version: ${url}`);
+				modelBuffers[index] = await cachedResponses[index].arrayBuffer();
+			}
+		}
+	}
+
+	const workers = [];
+	for (let i = 0; i < maxConcurrency; i++) {
+		workers.push(fetchWorker());
+	}
+	
+	await Promise.all(workers);
+
 	return { hasCache, modelBuffers };
 }
 
