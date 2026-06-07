@@ -8,7 +8,8 @@ import {
 	predictedToken,
 	modelSession,
 	defaultModelId,
-	getRuntimeModelMeta
+	getRuntimeModelMeta,
+	selectedModel
 } from '~/store';
 import { get } from 'svelte/store';
 import { reshapeArray } from './array';
@@ -58,31 +59,35 @@ export const runModel = async ({
 	isModelRunning.set(true);
 	predictedToken.set(undefined);
 
-	const { token_ids, input_tokens } = await getTokenization(tokenizer, input === '' ? ' ' : input);
+	try {
+		const { token_ids, input_tokens } = await getTokenization(tokenizer, input === '' ? ' ' : input);
 
-	let isOneTokenAdded: boolean;
-	tokens.set(input_tokens);
-	tokenIds.update((prev) => {
-		isOneTokenAdded =
-			prev.length === token_ids.length - 1 && prev.every((id, idx) => id === token_ids[idx]);
-		return token_ids;
-	});
+		let isOneTokenAdded: boolean;
+		tokens.set(input_tokens);
+		tokenIds.update((prev) => {
+			isOneTokenAdded =
+				prev.length === token_ids.length - 1 && prev.every((id, idx) => id === token_ids[idx]);
+			return token_ids;
+		});
 
-	const { logits, outputs } = await getData(token_ids);
+		const { logits, outputs } = await getData(token_ids);
 
-	const { probabilities, sampled } = getProbabilities({ tokenizer, logits, sampling, temperature });
+		const { probabilities, sampled } = getProbabilities({ tokenizer, logits, sampling, temperature });
 
-	modelData.set({ logits, outputs, probabilities, sampled });
+		modelData.set({ logits, outputs, probabilities, sampled });
 
-	// To ensure the animation starts after all elements have been rendered
-	setTimeout(async () => {
-		await showFlowAnimation(input_tokens.length, isOneTokenAdded);
+		// To ensure the animation starts after all elements have been rendered
+		setTimeout(async () => {
+			await showFlowAnimation(input_tokens.length, isOneTokenAdded);
 
-		predictedToken.set(sampled);
-		// setPredictedTokenForAnimation(probabilities, sampled, sampling);
-
+			predictedToken.set(sampled);
+			isModelRunning.set(false);
+		}, 0);
+	} catch (error) {
+		console.error('Failed to run model:', error);
+		alert('运行模型推理失败！错误信息: ' + error.message);
 		isModelRunning.set(false);
-	}, 0);
+	}
 };
 
 const setPredictedTokenForAnimation = (probabilities, sampled, sampling) => {
@@ -140,28 +145,82 @@ export const getData = async (token_ids: number[]) => {
 			throw new Error('Model session is not initialized.');
 		}
 
-		// Prepare the feeds (inputs)
-		const feeds = { input: inputTensor };
+		// Prepare the feeds (inputs) dynamically depending on the model
+		const inputName = session.inputNames[0] || 'input_ids';
+		const feeds = { [inputName]: inputTensor };
+
+		const runtimeModelMeta = getRuntimeModelMeta(get(selectedModel));
+		const layerNum = runtimeModelMeta.layer_num;
+		const headNum = runtimeModelMeta.attention_head_num;
+
+		// Optimize: specify exactly what outputs to fetch, skipping unused hidden states
+		const outputNames = ['logits'];
+		for (let i = 0; i < layerNum; i++) {
+			outputNames.push(`attentions_${i}`);
+		}
 
 		// Run inference
-		const results = await session.run(feeds);
+		const results = await session.run(feeds, outputNames);
 
 		// Extract the logits
-		const logits = results['linear_output'].data;
+		const logitsTensor = results['logits'] || results['linear_output'];
+		if (!logitsTensor) {
+			throw new Error('Logits output not found in model results.');
+		}
+
+		const seqLen = token_ids.length;
+		const vocabSize = logitsTensor.dims[logitsTensor.dims.length - 1];
+		const fullLogits = logitsTensor.data as Float32Array;
+
+		// Slice logits to extract only the last token's logits (size [vocabSize])
+		const logits = Array.from(
+			fullLogits.subarray((seqLen - 1) * vocabSize, seqLen * vocabSize)
+		);
 
 		// Extract the dictionary values
-		const outputs = targetTensors.reduce(
-			(obj, key) => {
-				const out = results[key];
-				const processedData = {
-					// ...out,
-					data: reshapeArray([...out.cpuData], out.dims)
-				};
-				obj[key] = processedData;
-				return obj;
-			},
-			{} as ModelData['outputs']
-		);
+		const outputs = {} as ModelData['outputs'];
+
+		for (let i = 0; i < layerNum; i++) {
+			const attnTensor = results[`attentions_${i}`];
+			
+			if (attnTensor && 'dims' in attnTensor) {
+				const fullData = attnTensor.data as Float32Array;
+				const headDim = seqLen * seqLen;
+				
+				for (let j = 0; j < headNum; j++) {
+					// Use subarray view to avoid copy and Array.from for fast array conversion
+					const start = j * headDim;
+					const headData = fullData.subarray(start, start + headDim);
+					const matrix = reshapeArray(Array.from(headData), [seqLen, seqLen]);
+					
+					const suffixes = ["attn", "attn_scaled", "attn_masked", "attn_softmax", "attn_dropout"];
+					for (const suffix of suffixes) {
+						outputs[`block_${i}_attn_head_${j}_${suffix}`] = {
+							data: matrix
+						};
+					}
+				}
+			} else {
+				// Fallback to old behavior or mock if missing
+				for (let j = 0; j < headNum; j++) {
+					const suffixes = ["attn", "attn_scaled", "attn_masked", "attn_softmax", "attn_dropout"];
+					for (const suffix of suffixes) {
+						const key = `block_${i}_attn_head_${j}_${suffix}`;
+						const out = results[key];
+						if (out) {
+							outputs[key] = {
+								data: reshapeArray(Array.from(out.cpuData as Float32Array), out.dims)
+							};
+						} else {
+							const mockMatrix = reshapeArray(new Array(seqLen * seqLen).fill(1 / seqLen), [seqLen, seqLen]);
+							outputs[key] = {
+								data: mockMatrix
+							};
+						}
+					}
+				}
+			}
+		}
 
 		return {
 			logits,

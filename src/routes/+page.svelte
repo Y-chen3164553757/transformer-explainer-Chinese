@@ -49,7 +49,7 @@
 	import QKV from '~/components/QKV.svelte';
 	import Textbook from '~/components/textbook/Textbook.svelte';
 
-	ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.0/dist/';
+	ort.env.wasm.wasmPaths = `${base}/wasm/`;
 	ort.env.logLevel = 'error';
 
 	// 使用本地 tokenizer 文件，避免从 HuggingFace 下载
@@ -95,13 +95,22 @@
 		const url = URL.createObjectURL(blob);
 
 		// Create ONNX session using the Blob URL
-		const session = await ort.InferenceSession.create(url, {
-			// logSeverityLevel: 0
-		});
-
-		modelSession.set(session);
-
-		isFetchingModel.set(false);
+		let session;
+		try {
+			const threads = Math.min(4, navigator.hardwareConcurrency || 4);
+			session = await ort.InferenceSession.create(url, {
+				executionProviders: ['wasm'],
+				intraOpNumThreads: threads,
+				interOpNumThreads: 1
+			});
+			modelSession.set(session);
+			isFetchingModel.set(false);
+		} catch (e) {
+			console.error('Failed to create ONNX session:', e);
+			alert('加载模型失败！您的浏览器可能不支持 WebAssembly 多线程（请确保在 secure context 下运行，并检查控制台报错）。\n\n错误信息: ' + e.message);
+			isFetchingModel.set(false);
+			return;
+		}
 
 		const loadTime = Date.now() - appStartTime;
 		window.dataLayer?.push({
@@ -120,6 +129,24 @@
 		 * store 已更新时，组件级 `$` 可能尚未推进，会导致推理少一截 token、与输入框 DOM 不同步。
 		 */
 		const runModelOrCache = (committedInput: string) => {
+			const trimmed = committedInput.trim();
+			const matchedExampleIdx = cachedDataMap.findIndex(
+				(ex) => ex.prompt.trim() === trimmed
+			);
+
+			if (matchedExampleIdx !== -1) {
+				if (get(selectedExampleIdx) !== matchedExampleIdx) {
+					selectedExampleIdx.set(matchedExampleIdx);
+				}
+				fakeRunWithCachedData({
+					cachedData: cachedDataMap[matchedExampleIdx],
+					tokenizer,
+					temperature: get(temperature),
+					sampling: get(sampling)
+				});
+				return;
+			}
+
 			if (get(isFetchingModel) || !get(modelSession)) {
 				const cachedData = cachedDataMap[get(selectedExampleIdx)];
 

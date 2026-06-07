@@ -664,12 +664,16 @@
 		return { curveOffset };
 	};
 
+	let frameId: number;
 	onMount(() => {
 		createGradients();
 
 		const updateSvgs = () => {
-			drawPath();
-			drawResidualPath();
+			if (frameId) cancelAnimationFrame(frameId);
+			frameId = requestAnimationFrame(() => {
+				drawPath();
+				drawResidualPath();
+			});
 		};
 
 		// animate during resizing
@@ -686,12 +690,13 @@
 
 		// redraw when data updated
 		const unsubscribeAttnIdx = attentionHeadIdx.subscribe(async (newIdx) => {
-			drawPath();
+			updateSvgs();
 		});
 
 		return () => {
 			resizeObserver.disconnect();
 			unsubscribeAttnIdx();
+			if (frameId) cancelAnimationFrame(frameId);
 		};
 	});
 
