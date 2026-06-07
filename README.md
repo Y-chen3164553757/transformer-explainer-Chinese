@@ -16,14 +16,15 @@
 
 Transformer Explainer 是一个**交互式 Transformer 可视化工具**，让任何人都能在浏览器中直观理解 GPT 类语言模型的工作原理。
 
-本中文版在原项目基础上，将模型替换为中文 GPT-2（`uer/gpt2-chinese-cluecorpussmall`），实现如下功能：
+本中文版在原项目基础上，使用**自建 7000 常用字词表**对中文 GPT-2 模型进行重新蒸馏与 **INT4 极限压缩**（模型大小仅为 67.9MB，且内置保存了中间层自注意力激活值），实现如下功能：
 
-- **浏览器内中文推理**：无需后端服务器，模型完全在浏览器中通过 ONNX Runtime Web 运行
+- **极速浏览器内推理**：无需后端服务器，模型通过 INT4 压缩，在浏览器端运行更加丝滑轻量
+- **自研 7000 精简词表**：废弃了原版 21128 的庞大词表，采用精简的 7000 词表和 138KB 的本地快速分词器，加载极快
 - **逐 token 可视化**：输入中文文本后，可视化每个 token 经过 Transformer 各层的完整计算过程
-- **注意力矩阵可视化**：展示每一层、每个注意力头的 Q/K/V 乘积、缩放、掩码与 Softmax 全过程
+- **自注意力机制可视化**：基于新模型内置输出的真实注意力权重，展示多头自注意力层 Q/K/V 乘积与 Softmax 的完整轨迹
 - **MLP 子层可视化**：展示前馈网络的线性变换与激活
 - **概率分布与采样**：展示最终 logits 经 temperature 缩放、Top-K 过滤、Softmax 归一化后的 token 概率分布，并可视化采样过程
-- **内置中文示例**：提供 5 个中文示例 prompt，支持离线演示（无需等待模型加载）
+- **内置中文示例**：提供 5 个预计算的中文示例，支持 0 延迟首屏离线演示（无需等待模型加载与推理）
 - **可调参数**：支持在界面上调整 temperature 与 Top-K 参数，实时观察对概率分布的影响
 
 ### 可视化的 Transformer 组件
@@ -59,11 +60,10 @@ Transformer Explainer 是一个**交互式 Transformer 可视化工具**，让�
 
 ### 模型运行原理
 
-1. Python 脚本将 HuggingFace 中文 GPT-2 权重映射到 nanoGPT 骨架，导出为与前端完全兼容的 ONNX 文件
-2. ONNX 文件按 10 MB 切分为多个分片，部署到 `static/` 目录
-3. 前端通过 `fetchChunks.js` 并发拉取分片，合并后创建 ONNX Runtime session
-4. 用户输入文本后，由 `BertTokenizer`（在浏览器端通过 `tokenizers` 库）分词
-5. `data.ts` 执行推理，提取所有注意力中间值和 `linear_output`，分发给各可视化组件
+1. **蒸馏与 INT4 量化**：离线阶段将原始中文 GPT-2 映射至 nanoGPT 骨架，基于 7000 字词表进行压缩，并以 INT4 量化导出为 67.9MB 的 `model_int4.onnx`（内置自注意力权重输出接口）。
+2. **单片高性能打包**：为避免过多的分片网络请求开销，最终模型以单分片形式（`gpt2.onnx.part0`）部署在 `static/` 下，前端拉取后直接利用浏览器 Cache API 缓存。
+3. **本地分词**：使用本地自建的 `student` 中文快速分词器进行分词，避免远端网络开销。
+4. **WASM 线程控制与防抖**：前端执行推理时限制最大使用 4 个 WASM 线程，规避多核 CPU 锁死，并对 SVG 重绘加入 `requestAnimationFrame` 防抖，保障推理与动画的丝滑表现。
 
 ### 关键设计决策
 
@@ -82,7 +82,7 @@ mlp.c_fc.weight      mlp.c_proj.weight
 
 ## 快速开始
 
-模型分片已内置于仓库的 `static/model-v2-chinese/` 目录，克隆后**无需任何 Python 环境**，直接启动前端即可。
+模型资产已内置于仓库的 `static/model-v2-chinese/` 目录（INT4 压缩版，67.9MB），自建分词器配置位于 `static/tokenizers/student/`，克隆后**无需配置任何 Python 环境**，直接启动前端开发服务器即可。
 
 **前提条件：** Node.js v20+，NPM v10+
 
@@ -93,38 +93,34 @@ npm install
 npm run dev
 ```
 
-访问 `http://localhost:5173`，首次打开时浏览器会自动下载并缓存模型分片，之后刷新无需重新下载。
+访问 `http://localhost:5173`，首次打开时浏览器会自动下载并缓存极简模型，之后刷新将直接读取本地缓存。
 
 ---
 
-## 我们做了什么 — 中文模型接入流程
+## 我们做了什么 — 自建词表与 INT4 模型接入流程
 
-原项目使用英文 GPT-2 权重，本版本将其替换为中文 GPT-2（`uer/gpt2-chinese-cluecorpussmall`）。整个过程通过四个离线 Python 脚本完成，产物直接放入仓库供前端使用。
+为了彻底解决中文 GPT-2 原版体积过大（~460MB）以及自注意力轨迹不真实的问题，我们使用**自建的 7000 中文字词表**重新编译了轻量 tokenizer，并将模型做 **INT4 极限压缩量化 (67.9MB)**。转换和预计算逻辑位于 `model_processing/` 目录中：
 
-### 四步流程概览
+### 离线处理流程概览
 
 ```
 model-config.json（唯一配置源，Python 与前端共享）
        │
-       ├─── 01.py ──────────────────► models/gpt2-chinese-cluecorpussmall/
-       │         从 HuggingFace 下载中文 GPT-2 权重
+       ├─── model_processing/01.py ──────────────────► 下载原始中文 GPT-2 权重
        │
-       ├─── 02_convert_onnx.py ─────► models/gpt2-chinese-onnx/model.onnx
-       │         HF 权重 → nanoGPT 骨架 → ONNX 导出（opset=11，~460 MB）
+       ├─── model_processing/02_convert_onnx.py ─────► 导出原始 ONNX 模型（含 26 个自注意力与隐藏状态节点）
        │
-       ├─── 03_chunk.py ────────────► static/model-v2-chinese/gpt2.onnx.part0~45
-       │         按 10 MB 切片，供浏览器并发加载
+       ├─── model_processing/03_chunk.py ────────────► 拷贝压缩量化后的单片模型至 static/model-v2-chinese/gpt2.onnx.part0
        │
-       └─── 04_gen_examples.py ─────► src/constants/examples/ex0~ex4.js
-                对 5 个中文提示词跑推理，生成前端离线示例数据
+       └─── model_processing/04_gen_examples.py ─────► 预计算 5 个中文提示词例子的自注意力与概率数据
 ```
 
 | 步骤 | 脚本                   | 核心操作                                                                                                                                                                                           | 输出                                           |
 | :--: | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-|  1  | `01.py`              | `snapshot_download` 从 HF 拉取权重，跳过 msgpack/h5 等非 PyTorch 文件                                                                                                                            | `models/gpt2-chinese-cluecorpussmall/`       |
-|  2  | `02_convert_onnx.py` | 加载 HF `GPT2LMHeadModel` → 映射到 nanoGPT `Linear`（4 组 `Conv1D` 权重需转置）→ 自定义 wrapper 抽取全部 attention 中间值 → `torch.onnx.export` opset=11，用 `BertTokenizer` 验证推理 | `models/gpt2-chinese-onnx/model.onnx`        |
-|  3  | `03_chunk.py`        | 按 `chunkSizeBytes`（10 MB）顺序切分，实际分片数与 `chunkTotal` 核对，不一致时打印警告                                                                                                         | `static/model-v2-chinese/gpt2.onnx.part0~45` |
-|  4  | `04_gen_examples.py` | 对 `examples` 中 5 个提示词跑 ONNX 推理，按 temperature + top-K 采样，序列化为前端可直接 import 的 JS 对象                                                                                       | `src/constants/examples/ex0~ex4.js`          |
+|  1  | `01.py`              | 从 HuggingFace 下载 uer 团队的中文 GPT-2 原始权重                                                                                                                                                | `model_processing/models/gpt2-chinese-cluecorpussmall/` |
+|  2  | `02_convert_onnx.py` | 映射至 nanoGPT 架构，在 Wrapper 中导出 12 个自注意力层节点，生成未量化的 ONNX 模型                                                                                                               | `model_processing/models/gpt2-chinese-onnx/model.onnx`        |
+|  3  | `03_chunk.py`        | 拷贝最终经过 **INT4 量化压缩后的极简模型 (67.9MB)** 到前端静态资源目录，且配置合并为单一分片以优化加载性能                                                                                        | `static/model-v2-chinese/gpt2.onnx.part0` |
+|  4  | `04_gen_examples.py` | 对 5 个内置中文例句跑 ONNX 模型推理，预生成各层自注意力头矩阵及概率分布数据，供前端离线渲染，实现首屏瞬间加载                                                                                     | `src/constants/examples/ex0~ex4.js`          |
 
 ### 关键细节
 
@@ -149,26 +145,27 @@ mlp.c_fc.weight      mlp.c_proj.weight
 
 ---
 
-## 模型来源与原始权重
+## 模型来源与自建词表
 
 | 资源                           | 地址                                                    |
 | ------------------------------ | ------------------------------------------------------- |
-| 中文 GPT-2 权重（HuggingFace） | https://huggingface.co/uer/gpt2-chinese-cluecorpussmall |
-| Tokenizer（bert-base-chinese） | https://huggingface.co/google-bert/bert-base-chinese    |
+| 中文 GPT-2 权重（原始基础）    | https://huggingface.co/uer/gpt2-chinese-cluecorpussmall |
+| 自建中文词表 (Vocab Size=7000) | 蒸馏重构出的 7000 常用简体中文精简字词表                |
+| 本地分词器 (student)           | 基于 BertTokenizerFast 序列化结构导出的 138KB 轻量配置  |
 
 ---
 
 ## 若需重新生成模型资产
 
-若需更换模型或重新生成分片，安装 Python 依赖后按顺序执行四个脚本：
+若需更换模型或重新生成分片，安装 Python 依赖后在 `model_processing/` 目录下按顺序执行四个脚本：
 
 ```bash
 pip install torch transformers onnxruntime huggingface_hub
 
 python 01.py                # 下载中文 GPT-2 权重
 python 02_convert_onnx.py   # 转换为 ONNX 并验证推理
-python 03_chunk.py          # 分片到浏览器静态目录
-python 04_gen_examples.py   # 生成 5 个中文示例数据
+python 03_chunk.py          # 拷贝量化后的单片模型至 static/
+python 04_gen_examples.py   # 生成 5 个中文预计算示例数据
 ```
 
 ---
@@ -178,34 +175,36 @@ python 04_gen_examples.py   # 生成 5 个中文示例数据
 | 字段                     | 含义                              | 默认值                               |
 | ------------------------ | --------------------------------- | ------------------------------------ |
 | `modelId`              | HuggingFace 模型 ID               | `uer/gpt2-chinese-cluecorpussmall` |
-| `tokenizerId`          | 使用的 tokenizer                  | `bert-base-chinese`                |
+| `tokenizerId`          | 使用的分词器 ID                   | `student`（自建精简词表分词器）      |
 | `hfMirror`             | HuggingFace 镜像源地址            | `https://hf-mirror.com`            |
 | `paths.staticModelDir` | 分片文件写入目录（Python 脚本用） | `static/model-v2-chinese`          |
 | `paths.publicModelDir` | 前端请求分片的 URL 前缀           | `model-v2-chinese`                 |
-| `runtime.chunkTotal`   | 分片总数，前端与 Python 共享      | `46`                               |
-| `runtime.cacheVersion` | 浏览器缓存版本键，升级模型时递增  | `v3`                               |
+| `runtime.chunkTotal`   | 分片总数，前端与 Python 共享      | `1`（INT4 量化合并为单片以优化性能） |
+| `runtime.cacheVersion` | 浏览器缓存版本键，升级模型时递增  | `v4`（全新版本）                     |
 
 ---
 
 ## 目录结构
 
 ```
-transformer-explainer/
+transformer-explainer-Chinese/
 ├── model-config.json          # 唯一配置源（Python + 前端共享）
-├── 01.py                      # Step 1: 下载模型权重
-├── 02_convert_onnx.py         # Step 2: 转换 ONNX
-├── 03_chunk.py                # Step 3: 分片
-├── 04_gen_examples.py         # Step 4: 生成示例数据
+├── model_processing/          # 离线模型转换与推理处理代码
+│   ├── 01.py                  # Step 1: 下载模型权重
+│   ├── 02_convert_onnx.py     # Step 2: 转换 ONNX
+│   ├── 03_chunk.py            # Step 3: 分片打包
+│   ├── 04_gen_examples.py     # Step 4: 生成示例数据
+│   └── model/                 # 包含量化后的 model_int4.onnx 及 vocab.txt
 ├── src/
-│   ├── routes/                # SvelteKit 页面入口
-│   ├── components/            # 可视化组件
-│   ├── store/                 # 全局状态（读取 model-config.json）
-│   ├── constants/examples/    # ex0~ex4.js 示例数据（由 04.py 生成）
-│   └── utils/model/           # nanoGPT 模型骨架（model.py）
+│   ├── routes/                # SvelteKit 页面入口（限制 WASM 线程，优化动画）
+│   ├── components/            # 可视化与 D3 连线组件（加入重绘帧防抖）
+│   ├── store/                 # 全局状态管理
+│   ├── constants/examples/    # 由 04.py 生成的预计算中文示例数据
+│   └── utils/model/           # nanoGPT 模型骨架 (model.py)
 ├── static/
-│   ├── model-v2-chinese/      # 模型分片（46 个，已内置于仓库）
-│   └── tokenizers/            # bert-base-chinese tokenizer 配置
-└── models/                    # 本地权重与 ONNX 中间文件（不上传 Git）
+│   ├── model-v2-chinese/      # 最终极简量化单片模型 (gpt2.onnx.part0, 67.9MB)
+│   ├── tokenizers/student/    # 自建 7000 词表快速分词器配置文件
+│   └── wasm/                  # 本地 onnxruntime-web WASM 依赖，规避 CDN 阻塞
 ```
 
 ---
